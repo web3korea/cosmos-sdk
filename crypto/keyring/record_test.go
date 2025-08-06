@@ -23,7 +23,7 @@ type RecordTestSuite struct {
 }
 
 func (s *RecordTestSuite) SetupSuite() {
-	s.appName = "cosmos"
+	s.appName = "guru"
 	s.cdc = getCodec()
 	s.priv = cryptotypes.PrivKey(ed25519.GenPrivKey())
 	s.pub = s.priv.PubKey()

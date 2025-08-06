@@ -23,7 +23,7 @@ func TestInMemoryCreateLedger(t *testing.T) {
 	cdc := getCodec()
 	kb := NewInMemory(cdc)
 
-	k, err := kb.SaveLedgerKey("some_account", hd.Secp256k1, "cosmos", 118, 3, 1)
+	k, err := kb.SaveLedgerKey("some_account", hd.Secp256k1, "guru", 118, 3, 1)
 	if err != nil {
 		require.Error(t, err)
 		require.Equal(t, "ledger nano S: support for ledger devices is not available in this executable", err.Error())
@@ -62,7 +62,7 @@ func TestSignVerifyKeyRingWithLedger(t *testing.T) {
 	kb, err := New("keybasename", "test", dir, nil, cdc)
 	require.NoError(t, err)
 
-	k, err := kb.SaveLedgerKey("key", hd.Secp256k1, "cosmos", 118, 0, 0)
+	k, err := kb.SaveLedgerKey("key", hd.Secp256k1, "guru", 118, 0, 0)
 	if err != nil {
 		require.Equal(t, "ledger nano S: support for ledger devices is not available in this executable", err.Error())
 		t.Skip("ledger nano S: support for ledger devices is not available in this executable")
@@ -104,10 +104,10 @@ func TestAltKeyring_SaveLedgerKey(t *testing.T) {
 	require.NoError(t, err)
 
 	// Test unsupported Algo
-	_, err = kr.SaveLedgerKey("key", notSupportedAlgo{}, "cosmos", 118, 0, 0)
+	_, err = kr.SaveLedgerKey("key", notSupportedAlgo{}, "guru", 118, 0, 0)
 	require.True(t, errors.Is(err, ErrUnsupportedSigningAlgo))
 
-	k, err := kr.SaveLedgerKey("some_account", hd.Secp256k1, "cosmos", 118, 3, 1)
+	k, err := kr.SaveLedgerKey("some_account", hd.Secp256k1, "guru", 118, 3, 1)
 	if err != nil {
 		require.Equal(t, "ledger nano S: support for ledger devices is not available in this executable", err.Error())
 		t.Skip("ledger nano S: support for ledger devices is not available in this executable")
@@ -142,7 +142,7 @@ func TestSignWithLedger(t *testing.T) {
 	// Create two distinct Ledger records: recordA and recordB.
 	// RecordA is added to the Ledger but recordB is not added.
 	pathA := hd.NewFundraiserParams(0, types.CoinType, 0)
-	privA, _, err := ledger.NewPrivKeySecp256k1(*pathA, "cosmos")
+	privA, _, err := ledger.NewPrivKeySecp256k1(*pathA, "guru")
 	require.NoError(t, err)
 	recordA, err := NewLedgerRecord("ledgerA", privA.PubKey(), pathA)
 	require.NoError(t, err)
