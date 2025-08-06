@@ -83,7 +83,7 @@ func TestArmorUnarmorPubKey(t *testing.T) {
 	err := depinject.Inject(depinject.Configs(
 		configurator.NewAppConfig(),
 		depinject.Supply(log.NewNopLogger(),
-			func() address.Codec { return addresscodec.NewBech32Codec("cosmos") },
+			func() address.Codec { return addresscodec.NewBech32Codec("guru") },
 			func() runtime.ValidatorAddressCodec { return addresscodec.NewBech32Codec("cosmosvaloper") },
 			func() runtime.ConsensusAddressCodec { return addresscodec.NewBech32Codec("cosmosvalcons") },
 		),

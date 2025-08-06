@@ -151,7 +151,7 @@ func (s *addressTestSuite) TestAddrCache() {
 	osmoAddrBech32 := acc.String()
 
 	// Set SDK bech32 to 'cosmos'
-	prefix = "cosmos"
+	prefix = "guru"
 	conf.SetBech32PrefixForAccount(prefix, prefix+"pub")
 	conf.SetBech32PrefixForValidator(prefix+"valoper", prefix+"valoperpub")
 	conf.SetBech32PrefixForConsensusNode(prefix+"valcons", prefix+"valconspub")
@@ -189,7 +189,7 @@ func (s *addressTestSuite) TestAddrCacheDisabled() {
 	osmoAddrBech32 := acc.String()
 
 	// Set SDK bech32 to 'cosmos'
-	prefix = "cosmos"
+	prefix = "guru"
 	conf.SetBech32PrefixForAccount(prefix, prefix+"pub")
 	conf.SetBech32PrefixForValidator(prefix+"valoper", prefix+"valoperpub")
 	conf.SetBech32PrefixForConsensusNode(prefix+"valcons", prefix+"valconspub")

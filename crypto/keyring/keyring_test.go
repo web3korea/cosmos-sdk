@@ -61,7 +61,7 @@ func TestNewKeyring(t *testing.T) {
 	}{
 		{
 			name:        "file backend",
-			appName:     "cosmos",
+			appName:     "guru",
 			backend:     BackendFile,
 			dir:         t.TempDir(),
 			userInput:   strings.NewReader(""),
@@ -70,7 +70,7 @@ func TestNewKeyring(t *testing.T) {
 		},
 		{
 			name:        "unknown backend",
-			appName:     "cosmos",
+			appName:     "guru",
 			backend:     "unknown",
 			dir:         t.TempDir(),
 			userInput:   strings.NewReader(""),
