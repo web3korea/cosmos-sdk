@@ -29,6 +29,9 @@ const (
 	Query_DelegatorValidators_FullMethodName         = "/cosmos.distribution.v1beta1.Query/DelegatorValidators"
 	Query_DelegatorWithdrawAddress_FullMethodName    = "/cosmos.distribution.v1beta1.Query/DelegatorWithdrawAddress"
 	Query_CommunityPool_FullMethodName               = "/cosmos.distribution.v1beta1.Query/CommunityPool"
+	Query_Ratio_FullMethodName                       = "/cosmos.distribution.v1beta1.Query/Ratio"
+	Query_BaseAddress_FullMethodName                 = "/cosmos.distribution.v1beta1.Query/BaseAddress"
+	Query_Moderator_FullMethodName                   = "/cosmos.distribution.v1beta1.Query/Moderator"
 )
 
 // QueryClient is the client API for Query service.
@@ -60,6 +63,12 @@ type QueryClient interface {
 	//
 	// WARNING: This query will fail if an external community pool is used.
 	CommunityPool(ctx context.Context, in *QueryCommunityPoolRequest, opts ...grpc.CallOption) (*QueryCommunityPoolResponse, error)
+	// Ratio queries the tx fee distribution ratio
+	Ratio(ctx context.Context, in *QueryRatioRequest, opts ...grpc.CallOption) (*QueryRatioResponse, error)
+	// BurnAddress queries the base_address for 1/3 fee
+	BaseAddress(ctx context.Context, in *QueryBaseAddressRequest, opts ...grpc.CallOption) (*QueryBaseAddressResponse, error)
+	// Moderator queries the moderator
+	Moderator(ctx context.Context, in *QueryModeratorRequest, opts ...grpc.CallOption) (*QueryModeratorResponse, error)
 }
 
 type queryClient struct {
@@ -170,6 +179,36 @@ func (c *queryClient) CommunityPool(ctx context.Context, in *QueryCommunityPoolR
 	return out, nil
 }
 
+func (c *queryClient) Ratio(ctx context.Context, in *QueryRatioRequest, opts ...grpc.CallOption) (*QueryRatioResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryRatioResponse)
+	err := c.cc.Invoke(ctx, Query_Ratio_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) BaseAddress(ctx context.Context, in *QueryBaseAddressRequest, opts ...grpc.CallOption) (*QueryBaseAddressResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryBaseAddressResponse)
+	err := c.cc.Invoke(ctx, Query_BaseAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) Moderator(ctx context.Context, in *QueryModeratorRequest, opts ...grpc.CallOption) (*QueryModeratorResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryModeratorResponse)
+	err := c.cc.Invoke(ctx, Query_Moderator_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
@@ -199,6 +238,12 @@ type QueryServer interface {
 	//
 	// WARNING: This query will fail if an external community pool is used.
 	CommunityPool(context.Context, *QueryCommunityPoolRequest) (*QueryCommunityPoolResponse, error)
+	// Ratio queries the tx fee distribution ratio
+	Ratio(context.Context, *QueryRatioRequest) (*QueryRatioResponse, error)
+	// BurnAddress queries the base_address for 1/3 fee
+	BaseAddress(context.Context, *QueryBaseAddressRequest) (*QueryBaseAddressResponse, error)
+	// Moderator queries the moderator
+	Moderator(context.Context, *QueryModeratorRequest) (*QueryModeratorResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -238,6 +283,15 @@ func (UnimplementedQueryServer) DelegatorWithdrawAddress(context.Context, *Query
 }
 func (UnimplementedQueryServer) CommunityPool(context.Context, *QueryCommunityPoolRequest) (*QueryCommunityPoolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CommunityPool not implemented")
+}
+func (UnimplementedQueryServer) Ratio(context.Context, *QueryRatioRequest) (*QueryRatioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Ratio not implemented")
+}
+func (UnimplementedQueryServer) BaseAddress(context.Context, *QueryBaseAddressRequest) (*QueryBaseAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BaseAddress not implemented")
+}
+func (UnimplementedQueryServer) Moderator(context.Context, *QueryModeratorRequest) (*QueryModeratorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Moderator not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 func (UnimplementedQueryServer) testEmbeddedByValue()               {}
@@ -440,6 +494,60 @@ func _Query_CommunityPool_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Ratio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRatioRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Ratio(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Ratio_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Ratio(ctx, req.(*QueryRatioRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_BaseAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBaseAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).BaseAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_BaseAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).BaseAddress(ctx, req.(*QueryBaseAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_Moderator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryModeratorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Moderator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Moderator_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Moderator(ctx, req.(*QueryModeratorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -486,6 +594,18 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CommunityPool",
 			Handler:    _Query_CommunityPool_Handler,
+		},
+		{
+			MethodName: "Ratio",
+			Handler:    _Query_Ratio_Handler,
+		},
+		{
+			MethodName: "BaseAddress",
+			Handler:    _Query_BaseAddress_Handler,
+		},
+		{
+			MethodName: "Moderator",
+			Handler:    _Query_Moderator_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

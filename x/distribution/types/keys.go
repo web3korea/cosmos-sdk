@@ -56,6 +56,10 @@ var (
 	ValidatorSlashEventPrefix            = []byte{0x08} // key for validator slash fraction
 
 	ParamsKey = collections.NewPrefix(9) // key for distribution module params
+
+	ModeratorAddrKey = []byte{0x10} // key for storing the moderator
+	BaseAddrKey      = []byte{0x11} // key for storing the base address
+	RatioKey         = []byte{0x12} // key for storing the distribution ratio
 )
 
 // GetValidatorOutstandingRewardsAddress creates an address from a validator's outstanding rewards key.

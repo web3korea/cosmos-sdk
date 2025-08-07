@@ -192,3 +192,30 @@ message CommunityPoolSpendProposalWithDeposit {
   string amount      = 4;
   string deposit     = 5;
 }
+
+message Ratio {
+  option (gogoproto.goproto_stringer) = false;
+  string staking_rewards              = 1 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  string base = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  string burn = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+message Moderator {
+  string address = 1;
+}
+
+message Base {
+  string address = 1;
+}

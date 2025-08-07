@@ -33,6 +33,15 @@ service Msg {
   // WARNING: This method will fail if an external community pool is used.
   rpc FundCommunityPool(MsgFundCommunityPool) returns (MsgFundCommunityPoolResponse);
 
+  // ChangeRatio defines a mthod to allow change the fee distribution ratio
+  rpc ChangeRatio(MsgChangeRatio) returns (MsgChangeRatioResponse);
+
+  // ChangeBaseAddress defines a method to allow changing the base address
+  rpc ChangeBaseAddress(MsgChangeBaseAddress) returns (MsgChangeBaseAddressResponse);
+
+  // ChangeModerator defines a method to allow changing the moderator
+  rpc ChangeModerator(MsgChangeModerator) returns (MsgChangeModeratorResponse);
+
   // UpdateParams defines a governance operation for updating the x/distribution
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
@@ -142,6 +151,39 @@ message MsgFundCommunityPool {
 
 // MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type.
 message MsgFundCommunityPoolResponse {}
+
+// MsgChangeRatio allows to set new tx fee distribution ratio
+message MsgChangeRatio {
+  option (cosmos.msg.v1.signer) = "moderator_address";
+
+  string moderator_address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  Ratio  ratio             = 2 [(gogoproto.nullable) = false];
+}
+
+// MsgChangeRatioResponse defines the Msg/ChangeRatio response type
+message MsgChangeRatioResponse {}
+
+// MsgChangeBaseAddress allows to set new base address
+message MsgChangeBaseAddress {
+  option (cosmos.msg.v1.signer) = "moderator_address";
+
+  string moderator_address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string new_base_address  = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgChangeBaseAddressResponse defines the Msg/ChangeBaseAddress response type
+message MsgChangeBaseAddressResponse {}
+
+// MsgChangeModerator allows to set new moderator
+message MsgChangeModerator {
+  option (cosmos.msg.v1.signer) = "moderator_address";
+
+  string moderator_address     = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string new_moderator_address = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgChangeModeratorResponse defines the Msg/ChangeModerator response type
+message MsgChangeModeratorResponse {}
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
 message MsgUpdateParams {

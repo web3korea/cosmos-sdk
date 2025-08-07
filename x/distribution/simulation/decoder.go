@@ -63,6 +63,24 @@ func NewDecodeStore(cdc codec.Codec) func(kvA, kvB kv.Pair) string {
 			cdc.MustUnmarshal(kvB.Value, &eventB)
 			return fmt.Sprintf("%v\n%v", eventA, eventB)
 
+		case bytes.Equal(kvA.Key[:1], types.RatioKey):
+			var ratioA, ratioB types.Ratio
+			cdc.MustUnmarshal(kvA.Value, &ratioA)
+			cdc.MustUnmarshal(kvB.Value, &ratioB)
+			return fmt.Sprintf("%v\n%v", ratioA, ratioB)
+
+		case bytes.Equal(kvA.Key[:1], types.BaseAddrKey):
+			var baseA, baseB types.Base
+			cdc.MustUnmarshal(kvA.Value, &baseA)
+			cdc.MustUnmarshal(kvB.Value, &baseB)
+			return fmt.Sprintf("%v\n%v", baseA, baseB)
+
+		case bytes.Equal(kvA.Key[:1], types.ModeratorAddrKey):
+			var moderatorA, moderatorB types.Moderator
+			cdc.MustUnmarshal(kvA.Value, &moderatorA)
+			cdc.MustUnmarshal(kvB.Value, &moderatorB)
+			return fmt.Sprintf("%v\n%v", moderatorA, moderatorB)
+
 		default:
 			panic(fmt.Sprintf("invalid distribution key prefix %X", kvA.Key[:1]))
 		}

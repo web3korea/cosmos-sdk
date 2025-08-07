@@ -15,6 +15,9 @@ const (
 	QueryDelegatorValidators         = "delegator_validators"
 	QueryWithdrawAddr                = "withdraw_addr"
 	QueryCommunityPool               = "community_pool"
+	QueryRatio                       = "ratio"
+	QueryBaseAddress                 = "base_address"
+	QueryModerator                   = "moderator"
 )
 
 // params for query 'custom/distr/validator_outstanding_rewards'
@@ -92,3 +95,12 @@ type QueryDelegatorWithdrawAddrParams struct {
 func NewQueryDelegatorWithdrawAddrParams(delegatorAddr sdk.AccAddress) QueryDelegatorWithdrawAddrParams {
 	return QueryDelegatorWithdrawAddrParams{DelegatorAddress: delegatorAddr}
 }
+
+// // params for query 'custom/distr/ratio'
+// type QueryRatioParams struct {
+// }
+
+// // NewQueryRatioParams creates a new instance of QueryRatioParams.
+// func NewQueryRatioParams() QueryRatioParams {
+// 	return QueryRatioParams{}
+// }

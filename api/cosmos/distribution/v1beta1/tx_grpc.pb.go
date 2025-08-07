@@ -23,6 +23,9 @@ const (
 	Msg_WithdrawDelegatorReward_FullMethodName     = "/cosmos.distribution.v1beta1.Msg/WithdrawDelegatorReward"
 	Msg_WithdrawValidatorCommission_FullMethodName = "/cosmos.distribution.v1beta1.Msg/WithdrawValidatorCommission"
 	Msg_FundCommunityPool_FullMethodName           = "/cosmos.distribution.v1beta1.Msg/FundCommunityPool"
+	Msg_ChangeRatio_FullMethodName                 = "/cosmos.distribution.v1beta1.Msg/ChangeRatio"
+	Msg_ChangeBaseAddress_FullMethodName           = "/cosmos.distribution.v1beta1.Msg/ChangeBaseAddress"
+	Msg_ChangeModerator_FullMethodName             = "/cosmos.distribution.v1beta1.Msg/ChangeModerator"
 	Msg_UpdateParams_FullMethodName                = "/cosmos.distribution.v1beta1.Msg/UpdateParams"
 	Msg_CommunityPoolSpend_FullMethodName          = "/cosmos.distribution.v1beta1.Msg/CommunityPoolSpend"
 	Msg_DepositValidatorRewardsPool_FullMethodName = "/cosmos.distribution.v1beta1.Msg/DepositValidatorRewardsPool"
@@ -48,6 +51,12 @@ type MsgClient interface {
 	//
 	// WARNING: This method will fail if an external community pool is used.
 	FundCommunityPool(ctx context.Context, in *MsgFundCommunityPool, opts ...grpc.CallOption) (*MsgFundCommunityPoolResponse, error)
+	// ChangeRatio defines a mthod to allow change the fee distribution ratio
+	ChangeRatio(ctx context.Context, in *MsgChangeRatio, opts ...grpc.CallOption) (*MsgChangeRatioResponse, error)
+	// ChangeBaseAddress defines a method to allow changing the base address
+	ChangeBaseAddress(ctx context.Context, in *MsgChangeBaseAddress, opts ...grpc.CallOption) (*MsgChangeBaseAddressResponse, error)
+	// ChangeModerator defines a method to allow changing the moderator
+	ChangeModerator(ctx context.Context, in *MsgChangeModerator, opts ...grpc.CallOption) (*MsgChangeModeratorResponse, error)
 	// UpdateParams defines a governance operation for updating the x/distribution
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
@@ -111,6 +120,36 @@ func (c *msgClient) FundCommunityPool(ctx context.Context, in *MsgFundCommunityP
 	return out, nil
 }
 
+func (c *msgClient) ChangeRatio(ctx context.Context, in *MsgChangeRatio, opts ...grpc.CallOption) (*MsgChangeRatioResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgChangeRatioResponse)
+	err := c.cc.Invoke(ctx, Msg_ChangeRatio_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) ChangeBaseAddress(ctx context.Context, in *MsgChangeBaseAddress, opts ...grpc.CallOption) (*MsgChangeBaseAddressResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgChangeBaseAddressResponse)
+	err := c.cc.Invoke(ctx, Msg_ChangeBaseAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) ChangeModerator(ctx context.Context, in *MsgChangeModerator, opts ...grpc.CallOption) (*MsgChangeModeratorResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgChangeModeratorResponse)
+	err := c.cc.Invoke(ctx, Msg_ChangeModerator_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MsgUpdateParamsResponse)
@@ -161,6 +200,12 @@ type MsgServer interface {
 	//
 	// WARNING: This method will fail if an external community pool is used.
 	FundCommunityPool(context.Context, *MsgFundCommunityPool) (*MsgFundCommunityPoolResponse, error)
+	// ChangeRatio defines a mthod to allow change the fee distribution ratio
+	ChangeRatio(context.Context, *MsgChangeRatio) (*MsgChangeRatioResponse, error)
+	// ChangeBaseAddress defines a method to allow changing the base address
+	ChangeBaseAddress(context.Context, *MsgChangeBaseAddress) (*MsgChangeBaseAddressResponse, error)
+	// ChangeModerator defines a method to allow changing the moderator
+	ChangeModerator(context.Context, *MsgChangeModerator) (*MsgChangeModeratorResponse, error)
 	// UpdateParams defines a governance operation for updating the x/distribution
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
@@ -195,6 +240,15 @@ func (UnimplementedMsgServer) WithdrawValidatorCommission(context.Context, *MsgW
 }
 func (UnimplementedMsgServer) FundCommunityPool(context.Context, *MsgFundCommunityPool) (*MsgFundCommunityPoolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FundCommunityPool not implemented")
+}
+func (UnimplementedMsgServer) ChangeRatio(context.Context, *MsgChangeRatio) (*MsgChangeRatioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeRatio not implemented")
+}
+func (UnimplementedMsgServer) ChangeBaseAddress(context.Context, *MsgChangeBaseAddress) (*MsgChangeBaseAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeBaseAddress not implemented")
+}
+func (UnimplementedMsgServer) ChangeModerator(context.Context, *MsgChangeModerator) (*MsgChangeModeratorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeModerator not implemented")
 }
 func (UnimplementedMsgServer) UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
@@ -298,6 +352,60 @@ func _Msg_FundCommunityPool_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_ChangeRatio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgChangeRatio)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).ChangeRatio(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_ChangeRatio_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).ChangeRatio(ctx, req.(*MsgChangeRatio))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_ChangeBaseAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgChangeBaseAddress)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).ChangeBaseAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_ChangeBaseAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).ChangeBaseAddress(ctx, req.(*MsgChangeBaseAddress))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_ChangeModerator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgChangeModerator)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).ChangeModerator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_ChangeModerator_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).ChangeModerator(ctx, req.(*MsgChangeModerator))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgUpdateParams)
 	if err := dec(in); err != nil {
@@ -374,6 +482,18 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FundCommunityPool",
 			Handler:    _Msg_FundCommunityPool_Handler,
+		},
+		{
+			MethodName: "ChangeRatio",
+			Handler:    _Msg_ChangeRatio_Handler,
+		},
+		{
+			MethodName: "ChangeBaseAddress",
+			Handler:    _Msg_ChangeBaseAddress_Handler,
+		},
+		{
+			MethodName: "ChangeModerator",
+			Handler:    _Msg_ChangeModerator_Handler,
 		},
 		{
 			MethodName: "UpdateParams",

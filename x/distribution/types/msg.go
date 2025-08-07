@@ -12,6 +12,9 @@ var (
 	_ sdk.Msg = (*MsgUpdateParams)(nil)
 	_ sdk.Msg = (*MsgCommunityPoolSpend)(nil)
 	_ sdk.Msg = (*MsgDepositValidatorRewardsPool)(nil)
+	_ sdk.Msg = (*MsgChangeRatio)(nil)
+	_ sdk.Msg = (*MsgChangeBaseAddress)(nil)
+	_ sdk.Msg = (*MsgChangeModerator)(nil)
 )
 
 func NewMsgSetWithdrawAddress(delAddr, withdrawAddr sdk.AccAddress) *MsgSetWithdrawAddress {
@@ -50,5 +53,29 @@ func NewMsgDepositValidatorRewardsPool(depositor, valAddr string, amount sdk.Coi
 		Amount:           amount,
 		Depositor:        depositor,
 		ValidatorAddress: valAddr,
+	}
+}
+
+// NewMsgChangeRatio returns a new MsgChangeRatio with a new distribution ratio
+func NewMsgChangeRatio(moderator sdk.AccAddress, ratio Ratio) *MsgChangeRatio {
+	return &MsgChangeRatio{
+		ModeratorAddress: moderator.String(),
+		Ratio:            ratio,
+	}
+}
+
+// NewMsgChangeBaseAddress returns a new MsgChangeBaseAddress with a new base address
+func NewMsgChangeBaseAddress(moderator sdk.AccAddress, newBaseAddress sdk.AccAddress) *MsgChangeBaseAddress {
+	return &MsgChangeBaseAddress{
+		ModeratorAddress: moderator.String(),
+		NewBaseAddress:   newBaseAddress.String(),
+	}
+}
+
+// NewMsgChangeModerator returns a new MsgChangeModerator with a new moderator
+func NewMsgChangeModerator(moderator sdk.AccAddress, newModerator sdk.AccAddress) *MsgChangeModerator {
+	return &MsgChangeModerator{
+		ModeratorAddress:    moderator.String(),
+		NewModeratorAddress: newModerator.String(),
 	}
 }

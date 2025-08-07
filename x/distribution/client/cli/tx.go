@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/pflag"
 
 	"cosmossdk.io/core/address"
+	"cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -43,6 +44,9 @@ func NewTxCmd(valAc, ac address.Codec) *cobra.Command {
 		NewSetWithdrawAddrCmd(ac),
 		NewFundCommunityPoolCmd(ac),
 		NewDepositValidatorRewardsPoolCmd(valAc, ac),
+		NewChangeRatioCmd(),
+		NewChangeBaseAddressCmd(),
+		NewChangeModeratorCmd(),
 	)
 
 	return distTxCmd
@@ -296,6 +300,115 @@ func NewDepositValidatorRewardsPoolCmd(valCodec, ac address.Codec) *cobra.Comman
 			}
 
 			msg := types.NewMsgDepositValidatorRewardsPool(depositorAddr, args[0], amount)
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// NewChangeRatioCmd returns a CLI command handler for creating a MsgChangeRatio transaction.
+func NewChangeRatioCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "change-ratio [staking_rewards] [base] [burn]",
+		Args:  cobra.ExactArgs(3),
+		Short: "Changes the values for fee distribution ratio",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Changes the values for fee distribution ratio
+
+Example:
+$ %s tx distribution change-ratio 0.333333333333333334 0.333333333333333333 0.333333333333333333 --from [moderator_address]
+`,
+				version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			moderatorAddr := clientCtx.GetFromAddress()
+			stakingRewards := args[0]
+			base := args[1]
+			burn := args[2]
+
+			msg := types.NewMsgChangeRatio(moderatorAddr,
+				types.Ratio{
+					StakingRewards: math.LegacyMustNewDecFromStr(stakingRewards),
+					Base:           math.LegacyMustNewDecFromStr(base),
+					Burn:           math.LegacyMustNewDecFromStr(burn),
+				})
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// NewChangeBaseAddress returns a CLI command handler for creating a MsgChangeBaseAddress transaction.
+func NewChangeBaseAddressCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "change-base-address [new_base_address]",
+		Args:  cobra.ExactArgs(1),
+		Short: "Changes the values for the base address",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Changes the values for the base address
+
+Example:
+$ %s tx distribution change-base-address [new_base_address] --from [moderator_address]
+`,
+				version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			moderatorAddr := clientCtx.GetFromAddress()
+			newBaseAddress := sdk.MustAccAddressFromBech32(args[0])
+
+			msg := types.NewMsgChangeBaseAddress(moderatorAddr, newBaseAddress)
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// NewChangeModerator returns a CLI command handler for creating a MsgChangeModerator transaction.
+func NewChangeModeratorCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "change-moderator [new_moderator_address]",
+		Args:  cobra.ExactArgs(1),
+		Short: "Changes the values for the moderator address",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Changes the values for the moderator address
+
+Example:
+$ %s tx distribution change-moderator [new_moderator_address] --from [moderator_address]
+`,
+				version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			moderatorAddr := clientCtx.GetFromAddress()
+			newModeratorAddress := sdk.MustAccAddressFromBech32(args[0])
+
+			msg := types.NewMsgChangeModerator(moderatorAddr, newModeratorAddress)
+
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}

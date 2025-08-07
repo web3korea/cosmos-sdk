@@ -131,6 +131,39 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	if !balances.Equal(moduleHoldingsInt) {
 		panic(fmt.Sprintf("distribution module balance does not match the module holdings: %s <-> %s", balances, moduleHoldingsInt))
 	}
+
+	if err := data.Ratio.ValidateRatio(); err != nil {
+		panic(fmt.Sprintf("invalid ratio: %s. Error: %s", data.Ratio, err))
+	}
+	err = k.SetRatio(ctx, data.Ratio)
+	if err != nil {
+		panic(err)
+	}
+
+	if _, err := sdk.AccAddressFromBech32(data.BaseAddress); err != nil {
+		panic(fmt.Sprintf("invalid base address: %s. Error: %s", data.BaseAddress, err))
+	}
+
+	if _, err := sdk.AccAddressFromBech32(data.ModeratorAddress); err != nil {
+		panic(fmt.Sprintf("invalid moderator address: %s. Error: %s", data.ModeratorAddress, err))
+	}
+	base := types.Base{
+		Address: data.BaseAddress,
+	}
+
+	moderator := types.Moderator{
+		Address: data.ModeratorAddress,
+	}
+
+	err = k.SetBaseAddress(ctx, base)
+	if err != nil {
+		panic(err)
+	}
+
+	err = k.SetModeratorAddress(ctx, moderator)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
@@ -230,5 +263,18 @@ func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
 		},
 	)
 
-	return types.NewGenesisState(params, feePool, dwi, pp, outstanding, acc, his, cur, dels, slashes)
+	ratio, err := k.GetRatio(ctx)
+	if err != nil {
+		panic(err)
+	}
+	base_addr, err := k.GetBaseAddress(ctx)
+	if err != nil {
+		panic(err)
+	}
+	moderator, err := k.GetModeratorAddress(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	return types.NewGenesisState(params, feePool, dwi, pp, outstanding, acc, his, cur, dels, slashes, ratio, base_addr.Address, moderator.Address)
 }

@@ -374,3 +374,33 @@ func (k Querier) CommunityPool(ctx context.Context, _ *types.QueryCommunityPoolR
 
 	return &types.QueryCommunityPoolResponse{Pool: pool.CommunityPool}, nil
 }
+
+// Ratio queries the tx fee distribution ratio
+func (k Querier) Ratio(ctx context.Context, _ *types.QueryRatioRequest) (*types.QueryRatioResponse, error) {
+	ratio, err := k.GetRatio(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryRatioResponse{Ratio: ratio}, nil
+}
+
+// BaseAddress queries the base address
+func (k Querier) BaseAddress(ctx context.Context, req *types.QueryBaseAddressRequest) (*types.QueryBaseAddressResponse, error) {
+	baseAddress, err := k.GetBaseAddress(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryBaseAddressResponse{BaseAddress: baseAddress.Address}, nil
+}
+
+// Moderator queries the moderator address
+func (k Querier) Moderator(ctx context.Context, req *types.QueryModeratorRequest) (*types.QueryModeratorResponse, error) {
+	moderator, err := k.GetModeratorAddress(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryModeratorResponse{ModeratorAddress: moderator.Address}, nil
+}

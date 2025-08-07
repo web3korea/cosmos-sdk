@@ -16,4 +16,6 @@ var (
 	ErrEmptyProposalRecipient  = errors.Register(ModuleName, 11, "invalid community pool spend proposal recipient")
 	ErrNoValidatorExists       = errors.Register(ModuleName, 12, "validator does not exist")
 	ErrNoDelegationExists      = errors.Register(ModuleName, 13, "delegation does not exist")
+	ErrInvalidRatio            = errors.Register(ModuleName, 14, "invalid ratio")
+	ErrInvalidModerator        = errors.Register(ModuleName, 15, "only moderator is allowed for this msg")
 )

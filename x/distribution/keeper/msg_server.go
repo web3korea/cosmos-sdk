@@ -124,6 +124,78 @@ func (k msgServer) FundCommunityPool(ctx context.Context, msg *types.MsgFundComm
 	return &types.MsgFundCommunityPoolResponse{}, nil
 }
 
+func (k msgServer) ChangeRatio(goCtx context.Context, msg *types.MsgChangeRatio) (*types.MsgChangeRatioResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	moderator, err := k.GetModeratorAddress(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if msg.ModeratorAddress != moderator.Address {
+		return nil, types.ErrInvalidModerator.Wrapf("expected: %s, got: %s", moderator, msg.ModeratorAddress)
+	}
+
+	if err := msg.Ratio.ValidateRatio(); err != nil {
+		return nil, errors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid ratio: %s. Error: %s", msg.Ratio, err)
+	}
+
+	err = k.Keeper.SetRatio(ctx, msg.Ratio)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgChangeRatioResponse{}, nil
+}
+
+func (k msgServer) ChangeBaseAddress(goCtx context.Context, msg *types.MsgChangeBaseAddress) (*types.MsgChangeBaseAddressResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	moderator, err := k.GetModeratorAddress(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if msg.ModeratorAddress != moderator.Address {
+		return nil, types.ErrInvalidModerator.Wrapf("expected: %s, got: %s", moderator, msg.ModeratorAddress)
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.NewBaseAddress); err != nil {
+		return nil, sdkerrors.ErrInvalidAddress.Wrapf("invalid new base address: %s", err)
+	}
+
+	err = k.Keeper.SetBaseAddress(ctx, types.Base{Address: msg.NewBaseAddress})
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgChangeBaseAddressResponse{}, nil
+}
+
+func (k msgServer) ChangeModerator(goCtx context.Context, msg *types.MsgChangeModerator) (*types.MsgChangeModeratorResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	moderator, err := k.GetModeratorAddress(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if msg.ModeratorAddress != moderator.Address {
+		return nil, types.ErrInvalidModerator.Wrapf("expected: %s, got: %s", moderator, msg.ModeratorAddress)
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.NewModeratorAddress); err != nil {
+		return nil, sdkerrors.ErrInvalidAddress.Wrapf("invalid new moderator address: %s", err)
+	}
+
+	err = k.Keeper.SetModeratorAddress(ctx, types.Moderator{Address: msg.NewModeratorAddress})
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgChangeModeratorResponse{}, nil
+}
+
 func (k msgServer) UpdateParams(ctx context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
 	if err := k.validateAuthority(msg.Authority); err != nil {
 		return nil, err

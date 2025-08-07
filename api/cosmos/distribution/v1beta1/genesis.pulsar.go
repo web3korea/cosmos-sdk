@@ -4130,6 +4130,9 @@ var (
 	fd_GenesisState_validator_current_rewards         protoreflect.FieldDescriptor
 	fd_GenesisState_delegator_starting_infos          protoreflect.FieldDescriptor
 	fd_GenesisState_validator_slash_events            protoreflect.FieldDescriptor
+	fd_GenesisState_ratio                             protoreflect.FieldDescriptor
+	fd_GenesisState_base_address                      protoreflect.FieldDescriptor
+	fd_GenesisState_moderator_address                 protoreflect.FieldDescriptor
 )
 
 func init() {
@@ -4145,6 +4148,9 @@ func init() {
 	fd_GenesisState_validator_current_rewards = md_GenesisState.Fields().ByName("validator_current_rewards")
 	fd_GenesisState_delegator_starting_infos = md_GenesisState.Fields().ByName("delegator_starting_infos")
 	fd_GenesisState_validator_slash_events = md_GenesisState.Fields().ByName("validator_slash_events")
+	fd_GenesisState_ratio = md_GenesisState.Fields().ByName("ratio")
+	fd_GenesisState_base_address = md_GenesisState.Fields().ByName("base_address")
+	fd_GenesisState_moderator_address = md_GenesisState.Fields().ByName("moderator_address")
 }
 
 var _ protoreflect.Message = (*fastReflection_GenesisState)(nil)
@@ -4272,6 +4278,24 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
+	if x.Ratio != nil {
+		value := protoreflect.ValueOfMessage(x.Ratio.ProtoReflect())
+		if !f(fd_GenesisState_ratio, value) {
+			return
+		}
+	}
+	if x.BaseAddress != "" {
+		value := protoreflect.ValueOfString(x.BaseAddress)
+		if !f(fd_GenesisState_base_address, value) {
+			return
+		}
+	}
+	if x.ModeratorAddress != "" {
+		value := protoreflect.ValueOfString(x.ModeratorAddress)
+		if !f(fd_GenesisState_moderator_address, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -4307,6 +4331,12 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 		return len(x.DelegatorStartingInfos) != 0
 	case "cosmos.distribution.v1beta1.GenesisState.validator_slash_events":
 		return len(x.ValidatorSlashEvents) != 0
+	case "cosmos.distribution.v1beta1.GenesisState.ratio":
+		return x.Ratio != nil
+	case "cosmos.distribution.v1beta1.GenesisState.base_address":
+		return x.BaseAddress != ""
+	case "cosmos.distribution.v1beta1.GenesisState.moderator_address":
+		return x.ModeratorAddress != ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.distribution.v1beta1.GenesisState"))
@@ -4343,6 +4373,12 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 		x.DelegatorStartingInfos = nil
 	case "cosmos.distribution.v1beta1.GenesisState.validator_slash_events":
 		x.ValidatorSlashEvents = nil
+	case "cosmos.distribution.v1beta1.GenesisState.ratio":
+		x.Ratio = nil
+	case "cosmos.distribution.v1beta1.GenesisState.base_address":
+		x.BaseAddress = ""
+	case "cosmos.distribution.v1beta1.GenesisState.moderator_address":
+		x.ModeratorAddress = ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.distribution.v1beta1.GenesisState"))
@@ -4410,6 +4446,15 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 		}
 		listValue := &_GenesisState_10_list{list: &x.ValidatorSlashEvents}
 		return protoreflect.ValueOfList(listValue)
+	case "cosmos.distribution.v1beta1.GenesisState.ratio":
+		value := x.Ratio
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "cosmos.distribution.v1beta1.GenesisState.base_address":
+		value := x.BaseAddress
+		return protoreflect.ValueOfString(value)
+	case "cosmos.distribution.v1beta1.GenesisState.moderator_address":
+		value := x.ModeratorAddress
+		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.distribution.v1beta1.GenesisState"))
@@ -4464,6 +4509,12 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 		lv := value.List()
 		clv := lv.(*_GenesisState_10_list)
 		x.ValidatorSlashEvents = *clv.list
+	case "cosmos.distribution.v1beta1.GenesisState.ratio":
+		x.Ratio = value.Message().Interface().(*Ratio)
+	case "cosmos.distribution.v1beta1.GenesisState.base_address":
+		x.BaseAddress = value.Interface().(string)
+	case "cosmos.distribution.v1beta1.GenesisState.moderator_address":
+		x.ModeratorAddress = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.distribution.v1beta1.GenesisState"))
@@ -4536,8 +4587,17 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 		}
 		value := &_GenesisState_10_list{list: &x.ValidatorSlashEvents}
 		return protoreflect.ValueOfList(value)
+	case "cosmos.distribution.v1beta1.GenesisState.ratio":
+		if x.Ratio == nil {
+			x.Ratio = new(Ratio)
+		}
+		return protoreflect.ValueOfMessage(x.Ratio.ProtoReflect())
 	case "cosmos.distribution.v1beta1.GenesisState.previous_proposer":
 		panic(fmt.Errorf("field previous_proposer of message cosmos.distribution.v1beta1.GenesisState is not mutable"))
+	case "cosmos.distribution.v1beta1.GenesisState.base_address":
+		panic(fmt.Errorf("field base_address of message cosmos.distribution.v1beta1.GenesisState is not mutable"))
+	case "cosmos.distribution.v1beta1.GenesisState.moderator_address":
+		panic(fmt.Errorf("field moderator_address of message cosmos.distribution.v1beta1.GenesisState is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.distribution.v1beta1.GenesisState"))
@@ -4580,6 +4640,13 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 	case "cosmos.distribution.v1beta1.GenesisState.validator_slash_events":
 		list := []*ValidatorSlashEventRecord{}
 		return protoreflect.ValueOfList(&_GenesisState_10_list{list: &list})
+	case "cosmos.distribution.v1beta1.GenesisState.ratio":
+		m := new(Ratio)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	case "cosmos.distribution.v1beta1.GenesisState.base_address":
+		return protoreflect.ValueOfString("")
+	case "cosmos.distribution.v1beta1.GenesisState.moderator_address":
+		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.distribution.v1beta1.GenesisState"))
@@ -4703,6 +4770,18 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				n += 1 + l + runtime.Sov(uint64(l))
 			}
 		}
+		if x.Ratio != nil {
+			l = options.Size(x.Ratio)
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.BaseAddress)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.ModeratorAddress)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -4731,6 +4810,34 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 		if x.unknownFields != nil {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.ModeratorAddress) > 0 {
+			i -= len(x.ModeratorAddress)
+			copy(dAtA[i:], x.ModeratorAddress)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.ModeratorAddress)))
+			i--
+			dAtA[i] = 0x6a
+		}
+		if len(x.BaseAddress) > 0 {
+			i -= len(x.BaseAddress)
+			copy(dAtA[i:], x.BaseAddress)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.BaseAddress)))
+			i--
+			dAtA[i] = 0x62
+		}
+		if x.Ratio != nil {
+			encoded, err := options.Marshal(x.Ratio)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+			i--
+			dAtA[i] = 0x5a
 		}
 		if len(x.ValidatorSlashEvents) > 0 {
 			for iNdEx := len(x.ValidatorSlashEvents) - 1; iNdEx >= 0; iNdEx-- {
@@ -5270,6 +5377,106 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
 				}
 				iNdEx = postIndex
+			case 11:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Ratio", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.Ratio == nil {
+					x.Ratio = &Ratio{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.Ratio); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 12:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BaseAddress", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.BaseAddress = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 13:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ModeratorAddress", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.ModeratorAddress = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -5706,6 +5913,12 @@ type GenesisState struct {
 	DelegatorStartingInfos []*DelegatorStartingInfoRecord `protobuf:"bytes,9,rep,name=delegator_starting_infos,json=delegatorStartingInfos,proto3" json:"delegator_starting_infos,omitempty"`
 	// fee_pool defines the validator slash events at genesis.
 	ValidatorSlashEvents []*ValidatorSlashEventRecord `protobuf:"bytes,10,rep,name=validator_slash_events,json=validatorSlashEvents,proto3" json:"validator_slash_events,omitempty"`
+	// Ratio defines the fee distribution ratio between rewards/base/burn
+	Ratio *Ratio `protobuf:"bytes,11,opt,name=ratio,proto3" json:"ratio,omitempty"`
+	// base_address hold the foundation address for receiving the 1/3 of the fees
+	BaseAddress string `protobuf:"bytes,12,opt,name=base_address,json=baseAddress,proto3" json:"base_address,omitempty"`
+	// moderator is allowed to set the ratio and base address
+	ModeratorAddress string `protobuf:"bytes,13,opt,name=moderator_address,json=moderatorAddress,proto3" json:"moderator_address,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -5796,6 +6009,27 @@ func (x *GenesisState) GetValidatorSlashEvents() []*ValidatorSlashEventRecord {
 		return x.ValidatorSlashEvents
 	}
 	return nil
+}
+
+func (x *GenesisState) GetRatio() *Ratio {
+	if x != nil {
+		return x.Ratio
+	}
+	return nil
+}
+
+func (x *GenesisState) GetBaseAddress() string {
+	if x != nil {
+		return x.BaseAddress
+	}
+	return ""
+}
+
+func (x *GenesisState) GetModeratorAddress() string {
+	if x != nil {
+		return x.ModeratorAddress
+	}
+	return ""
 }
 
 var File_cosmos_distribution_v1beta1_genesis_proto protoreflect.FileDescriptor
@@ -5921,7 +6155,7 @@ var file_cosmos_distribution_v1beta1_genesis_proto_rawDesc = []byte{
 	0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x53, 0x6c, 0x61, 0x73, 0x68, 0x45, 0x76,
 	0x65, 0x6e, 0x74, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x13,
 	0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x53, 0x6c, 0x61, 0x73, 0x68, 0x45, 0x76,
-	0x65, 0x6e, 0x74, 0x3a, 0x08, 0x88, 0xa0, 0x1f, 0x00, 0xe8, 0xa0, 0x1f, 0x00, 0x22, 0x8c, 0x09,
+	0x65, 0x6e, 0x74, 0x3a, 0x08, 0x88, 0xa0, 0x1f, 0x00, 0xe8, 0xa0, 0x1f, 0x00, 0x22, 0x9c, 0x0a,
 	0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x46,
 	0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x23,
 	0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x64, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75,
@@ -5994,7 +6228,16 @@ var file_cosmos_distribution_v1beta1_genesis_proto_rawDesc = []byte{
 	0x72, 0x53, 0x6c, 0x61, 0x73, 0x68, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x63, 0x6f, 0x72,
 	0x64, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x14, 0x76, 0x61,
 	0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x53, 0x6c, 0x61, 0x73, 0x68, 0x45, 0x76, 0x65, 0x6e,
-	0x74, 0x73, 0x3a, 0x08, 0x88, 0xa0, 0x1f, 0x00, 0xe8, 0xa0, 0x1f, 0x00, 0x42, 0x83, 0x02, 0xa8,
+	0x74, 0x73, 0x12, 0x3e, 0x0a, 0x05, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x18, 0x0b, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x22, 0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x64, 0x69, 0x73, 0x74, 0x72,
+	0x69, 0x62, 0x75, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x76, 0x31, 0x62, 0x65, 0x74, 0x61, 0x31, 0x2e,
+	0x52, 0x61, 0x74, 0x69, 0x6f, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x05, 0x72, 0x61, 0x74,
+	0x69, 0x6f, 0x12, 0x21, 0x0a, 0x0c, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x61, 0x64, 0x64, 0x72, 0x65,
+	0x73, 0x73, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x62, 0x61, 0x73, 0x65, 0x41, 0x64,
+	0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x2b, 0x0a, 0x11, 0x6d, 0x6f, 0x64, 0x65, 0x72, 0x61, 0x74,
+	0x6f, 0x72, 0x5f, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x0d, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x10, 0x6d, 0x6f, 0x64, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x41, 0x64, 0x64, 0x72, 0x65,
+	0x73, 0x73, 0x3a, 0x08, 0x88, 0xa0, 0x1f, 0x00, 0xe8, 0xa0, 0x1f, 0x00, 0x42, 0x83, 0x02, 0xa8,
 	0xe2, 0x1e, 0x01, 0x0a, 0x1f, 0x63, 0x6f, 0x6d, 0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
 	0x64, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x76, 0x31, 0x62,
 	0x65, 0x74, 0x61, 0x31, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f,
@@ -6044,6 +6287,7 @@ var file_cosmos_distribution_v1beta1_genesis_proto_goTypes = []interface{}{
 	(*ValidatorSlashEvent)(nil),                  // 13: cosmos.distribution.v1beta1.ValidatorSlashEvent
 	(*Params)(nil),                               // 14: cosmos.distribution.v1beta1.Params
 	(*FeePool)(nil),                              // 15: cosmos.distribution.v1beta1.FeePool
+	(*Ratio)(nil),                                // 16: cosmos.distribution.v1beta1.Ratio
 }
 var file_cosmos_distribution_v1beta1_genesis_proto_depIdxs = []int32{
 	8,  // 0: cosmos.distribution.v1beta1.ValidatorOutstandingRewardsRecord.outstanding_rewards:type_name -> cosmos.base.v1beta1.DecCoin
@@ -6061,11 +6305,12 @@ var file_cosmos_distribution_v1beta1_genesis_proto_depIdxs = []int32{
 	4,  // 12: cosmos.distribution.v1beta1.GenesisState.validator_current_rewards:type_name -> cosmos.distribution.v1beta1.ValidatorCurrentRewardsRecord
 	5,  // 13: cosmos.distribution.v1beta1.GenesisState.delegator_starting_infos:type_name -> cosmos.distribution.v1beta1.DelegatorStartingInfoRecord
 	6,  // 14: cosmos.distribution.v1beta1.GenesisState.validator_slash_events:type_name -> cosmos.distribution.v1beta1.ValidatorSlashEventRecord
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	16, // 15: cosmos.distribution.v1beta1.GenesisState.ratio:type_name -> cosmos.distribution.v1beta1.Ratio
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_cosmos_distribution_v1beta1_genesis_proto_init() }

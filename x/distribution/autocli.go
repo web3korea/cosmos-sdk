@@ -85,6 +85,25 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Short:     "Query the amount of coins in the community pool",
 					Example:   fmt.Sprintf(`$ %s query distribution community-pool`, version.AppName),
 				},
+				// TODO: register queries
+				// {
+				// 	RpcMethod: "Ratio",
+				// 	Use:       "ratio",
+				// 	Short:     "Query the tx fee distribution ratio",
+				// 	Example:   fmt.Sprintf(`$ %s query distribution ratio`, version.AppName),
+				// },
+				// {
+				// 	RpcMethod: "BaseAddress",
+				// 	Use:       "base-address",
+				// 	Short:     "Query the base address",
+				// 	Example:   fmt.Sprintf(`$ %s query distribution base-address`, version.AppName),
+				// },
+				// {
+				// 	RpcMethod: "Moderator",
+				// 	Use:       "moderator",
+				// 	Short:     "Query the moderator address",
+				// 	Example:   fmt.Sprintf(`$ %s query distribution moderator`, version.AppName),
+				// },
 			},
 		},
 		Tx: &autocliv1.ServiceCommandDescriptor{
@@ -153,6 +172,35 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					},
 					GovProposal: true,
 				},
+				// {
+				// 	RpcMethod: "ChangeRatio",
+				// 	Use:       "change-ratio [burn] [base] [staking]",
+				// 	Short:     "Change the tx fee distribution ratio",
+				// 	Example:   fmt.Sprintf(`$ %s tx distribution change-ratio 0.1 0.2 0.3`, version.AppName),
+				// 	PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+				// 		{ProtoField: "burn"},
+				// 		{ProtoField: "base"},
+				// 		{ProtoField: "staking"},
+				// 	},
+				// },
+				// {
+				// 	RpcMethod: "ChangeBaseAddress",
+				// 	Use:       "change-base-address [base-address]",
+				// 	Short:     "Change the base address",
+				// 	Example:   fmt.Sprintf(`$ %s tx distribution change-base-address [base-address]`, version.AppName),
+				// 	PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+				// 		{ProtoField: "base_address"},
+				// 	},
+				// },
+				// {
+				// 	RpcMethod: "ChangeModerator",
+				// 	Use:       "change-moderator [moderator-address]",
+				// 	Short:     "Change the moderator address",
+				// 	Example:   fmt.Sprintf(`$ %s tx distribution change-moderator [moderator-address]`, version.AppName),
+				// 	PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+				// 		{ProtoField: "moderator_address"},
+				// 	},
+				// },
 			},
 			EnhanceCustomCommand: true,
 		},
