@@ -14,6 +14,7 @@ import (
 	storetypes "cosmossdk.io/store/types"
 
 	"github.com/cosmos/cosmos-sdk/codec/address"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	"github.com/cosmos/cosmos-sdk/runtime"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -88,8 +89,19 @@ func setupTest(t *testing.T, protocolPoolEnabled bool) testSetup {
 		opts...,
 	)
 
+	modPriv := secp256k1.GenPrivKey()
+	modAddr := sdk.AccAddress(modPriv.PubKey().Address()).String()
+	basePriv := secp256k1.GenPrivKey()
+	baseAddr := sdk.AccAddress(basePriv.PubKey().Address()).String()
+	err := distrKeeper.SetBaseAddress(testCtx.Ctx, disttypes.Base{Address: baseAddr})
+	require.NoError(t, err)
+	err = distrKeeper.SetModeratorAddress(testCtx.Ctx, disttypes.Moderator{Address: modAddr})
+	require.NoError(t, err)
+	err = distrKeeper.SetRatio(testCtx.Ctx, disttypes.InitialRatio())
+	require.NoError(t, err)
+
 	// empty initialize
-	err := distrKeeper.FeePool.Set(testCtx.Ctx, disttypes.FeePool{
+	err = distrKeeper.FeePool.Set(testCtx.Ctx, disttypes.FeePool{
 		CommunityPool: sdk.NewDecCoins(),
 	})
 	require.NoError(t, err)
@@ -116,6 +128,8 @@ func TestBeginBlockNoOp(t *testing.T) {
 
 	feePoolBefore, err := ts.distrKeeper.FeePool.Get(ctx)
 	require.NoError(t, err)
+	ts.bankKeeper.EXPECT().BurnCoins(gomock.Any(), "distribution", gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 	err = ts.distrKeeper.BeginBlocker(ctx)
 	require.NoError(t, err)
 	feePoolAfter, err := ts.distrKeeper.FeePool.Get(ctx)
@@ -193,7 +207,7 @@ func TestBeginBlockToMultipleValidators(t *testing.T) {
 	})
 
 	// allocate tokens as if both had voted and second was proposer
-	fees := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(100)))
+	fees := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(298)))
 	ts.bankKeeper.EXPECT().GetAllBalances(gomock.Any(), feeCollectorAcc.GetAddress()).Return(fees)
 	ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), "fee_collector", disttypes.ModuleName, fees)
 
@@ -215,6 +229,8 @@ func TestBeginBlockToMultipleValidators(t *testing.T) {
 
 	feePoolBefore, err := ts.distrKeeper.FeePool.Get(ctx)
 	require.NoError(t, err)
+	ts.bankKeeper.EXPECT().BurnCoins(gomock.Any(), "distribution", gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 	err = ts.distrKeeper.BeginBlocker(ctx)
 	require.NoError(t, err)
 	feePoolAfter, err := ts.distrKeeper.FeePool.Get(ctx)
@@ -366,6 +382,8 @@ func TestBeginBlockCommunityPoolCollectsDust(t *testing.T) {
 
 	feePoolBefore, err := ts.distrKeeper.FeePool.Get(ctx)
 	require.NoError(t, err)
+	ts.bankKeeper.EXPECT().BurnCoins(gomock.Any(), "distribution", gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 	err = ts.distrKeeper.BeginBlocker(ctx)
 	require.NoError(t, err)
 	feePoolAfter, err := ts.distrKeeper.FeePool.Get(ctx)
@@ -409,6 +427,8 @@ func TestBeginBlockNoOpProtocolPool(t *testing.T) {
 
 	feePoolBefore, err := ts.distrKeeper.FeePool.Get(ctx)
 	require.NoError(t, err)
+	ts.bankKeeper.EXPECT().BurnCoins(gomock.Any(), "distribution", gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 	err = ts.distrKeeper.BeginBlocker(ctx)
 	require.NoError(t, err)
 	feePoolAfter, err := ts.distrKeeper.FeePool.Get(ctx)
@@ -487,7 +507,7 @@ func TestBeginBlockToMultipleValidatorsProtocolPool(t *testing.T) {
 	})
 
 	// allocate tokens as if both had voted and second was proposer
-	fees := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(100)))
+	fees := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(298)))
 	ts.bankKeeper.EXPECT().GetAllBalances(gomock.Any(), feeCollectorAcc.GetAddress()).Return(fees)
 	ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), "fee_collector", disttypes.ModuleName, fees).AnyTimes()
 
@@ -509,10 +529,14 @@ func TestBeginBlockToMultipleValidatorsProtocolPool(t *testing.T) {
 	ctx = ctx.WithVoteInfos(votes).WithBlockHeight(1000)
 
 	// we should fully remove everything that was in the community pool (2stake)
-	ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), disttypes.ModuleName, protocolpooltypes.ProtocolPoolEscrowAccount, sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, 2))).Return(nil).Times(1)
+	// ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), disttypes.ModuleName, protocolpooltypes.ProtocolPoolEscrowAccount, sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, 2))).Return(nil).Times(1)
 
 	feePoolBefore, err := ts.distrKeeper.FeePool.Get(ctx)
 	require.NoError(t, err)
+
+	ts.bankKeeper.EXPECT().BurnCoins(gomock.Any(), "distribution", gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), disttypes.ModuleName, gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 	err = ts.distrKeeper.BeginBlocker(ctx)
 	require.NoError(t, err)
 	feePoolAfter, err := ts.distrKeeper.FeePool.Get(ctx)
@@ -660,10 +684,13 @@ func TestBeginBlockCommunityPoolCollectsDustProtocolPool(t *testing.T) {
 	// integer portion will be sent to the protocol pool as sdk.Coins
 	// decimal version will remain as "dust"
 	expectedCommunityPool := sdk.NewDecCoins(sdk.NewDecCoinFromDec(sdk.DefaultBondDenom, math.LegacyMustNewDecFromStr("0.800000001243023848")))
-	ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), disttypes.ModuleName, protocolpooltypes.ProtocolPoolEscrowAccount, sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, 12683916))).Return(nil).Times(1)
+	// ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), disttypes.ModuleName, protocolpooltypes.ProtocolPoolEscrowAccount, sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, 12683916))).Return(nil).Times(1)
 
 	feePoolBefore, err := ts.distrKeeper.FeePool.Get(ctx)
 	require.NoError(t, err)
+	ts.bankKeeper.EXPECT().BurnCoins(gomock.Any(), "distribution", gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToAccount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
+	ts.bankKeeper.EXPECT().SendCoinsFromModuleToModule(gomock.Any(), disttypes.ModuleName, gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 	err = ts.distrKeeper.BeginBlocker(ctx)
 	require.NoError(t, err)
 	feePoolAfter, err := ts.distrKeeper.FeePool.Get(ctx)

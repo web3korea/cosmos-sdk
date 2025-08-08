@@ -117,7 +117,7 @@ var (
 	// module account permissions
 	maccPerms = map[string][]string{
 		authtypes.FeeCollectorName:                  nil,
-		distrtypes.ModuleName:                       nil,
+		distrtypes.ModuleName:                       {authtypes.Burner},
 		minttypes.ModuleName:                        {authtypes.Minter},
 		stakingtypes.BondedPoolName:                 {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName:              {authtypes.Burner, authtypes.Staking},
@@ -469,7 +469,7 @@ func NewSimApp(
 
 	app.GovKeeper = *govKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
-			// register the governance hooks
+		// register the governance hooks
 		),
 	)
 
@@ -499,7 +499,7 @@ func NewSimApp(
 
 	app.EpochsKeeper.SetHooks(
 		epochstypes.NewMultiEpochHooks(
-			// insert epoch hooks receivers here
+		// insert epoch hooks receivers here
 		),
 	)
 

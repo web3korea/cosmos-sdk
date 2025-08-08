@@ -135,7 +135,7 @@ func (m *MockBankKeeper) EXPECT() *MockBankKeeperMockRecorder {
 	return m.recorder
 }
 
-// BlockedAddr mocks base method.
+// BurnCoins mocks base method.
 func (m *MockBankKeeper) BurnCoins(ctx context.Context, name string, amt types.Coins) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BurnCoins", ctx, name, amt)
@@ -143,7 +143,7 @@ func (m *MockBankKeeper) BurnCoins(ctx context.Context, name string, amt types.C
 	return ret0
 }
 
-// BlockedAddr indicates an expected call of BlockedAddr.
+// BurnCoins indicates an expected call of BurnCoins.
 func (mr *MockBankKeeperMockRecorder) BurnCoins(ctx, name, amt any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BurnCoins", reflect.TypeOf((*MockBankKeeper)(nil).BurnCoins), ctx, name, amt)
