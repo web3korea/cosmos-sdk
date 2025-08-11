@@ -13,7 +13,7 @@ const (
 	EventTypeChangeModerator    = "change_moderator"
 	EventTypeBurnFee            = "burn_fee"
 	EventTypeBaseFee            = "base_fee"
-	EventTypeStakingFee         = "staking_fee"
+	EventTypeStakingRewards     = "staking_rewards"
 
 	AttributeKeyWithdrawAddress = "withdraw_address"
 	AttributeKeyValidator       = "validator"

@@ -93,6 +93,11 @@ func (AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	types.RegisterInterfaces(registry)
 }
 
+// GetQueryCmd returns the root query command for the distribution module.
+func (AppModuleBasic) GetQueryCmd() *cobra.Command {
+	return cli.GetQueryCmd()
+}
+
 // AppModule implements an application module for the distribution module.
 type AppModule struct {
 	AppModuleBasic

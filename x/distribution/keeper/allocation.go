@@ -35,7 +35,6 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 		if err != nil {
 			return err
 		}
-		logger.Info("Ratio", "base", ratio.Base, "burn", ratio.Burn, "staking_rewards", ratio.StakingRewards)
 
 		// burn fee: ratio.Burn
 		burnFee := k.CalculatePercentage(feesCollectedInt, ratio.Burn)
@@ -51,7 +50,7 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 				sdk.NewAttribute(sdk.AttributeKeyAmount, burnFee.String()),
 			),
 		)
-		logger.Info("Event Emitted", "type", types.EventTypeBurnFee, "key", sdk.AttributeKeyAmount, "value", burnFee.String())
+		logger.Info("Fee Distribution", "type", types.EventTypeBurnFee, "proportion", ratio.Burn, "amount", burnFee.String())
 
 		// base fee: ratio.Base
 		base, err := k.GetBaseAddress(sdkCtx)
@@ -74,11 +73,11 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 				sdk.NewAttribute(sdk.AttributeKeyAmount, baseFee.String()),
 			),
 		)
-		logger.Info("Event Emitted", "type", types.EventTypeBaseFee, "key", sdk.AttributeKeyAmount, "value", baseFee.String(), "base_address", base.Address)
+		logger.Info("Fee Distribution", "type", types.EventTypeBaseFee, "proportion", ratio.Base, "amount", baseFee.String())
 
 		feesCollectedInt = feesCollectedInt.Sub(burnFee...).Sub(baseFee...)
 		feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
-		logger.Info("Staking Rewards", "key", sdk.AttributeKeyAmount, "value", feesCollected.String())
+		logger.Info("Fee Distributions", "type", types.EventTypeStakingRewards, "proportion", ratio.StakingRewards, "amount", feesCollected.String())
 
 		// temporary workaround to keep CanWithdrawInvariant happy
 		// general discussions here: https://github.com/cosmos/cosmos-sdk/issues/2906#issuecomment-441867634
