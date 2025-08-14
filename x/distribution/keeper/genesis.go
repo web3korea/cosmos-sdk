@@ -140,29 +140,31 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 		panic(err)
 	}
 
-	if _, err := sdk.AccAddressFromBech32(data.BaseAddress); err != nil {
-		panic(fmt.Sprintf("invalid base address: %s. Error: %s", data.BaseAddress, err))
+	if data.ModeratorAddress == "" {
+		data.ModeratorAddress = k.authority
 	}
-
 	if _, err := sdk.AccAddressFromBech32(data.ModeratorAddress); err != nil {
 		panic(fmt.Sprintf("invalid moderator address: %s. Error: %s", data.ModeratorAddress, err))
 	}
-	base := types.Base{
-		Address: data.BaseAddress,
-	}
-
 	moderator := types.Moderator{
 		Address: data.ModeratorAddress,
 	}
-
-	err = k.SetBaseAddress(ctx, base)
+	err = k.SetModeratorAddress(ctx, moderator)
 	if err != nil {
 		panic(err)
 	}
 
-	err = k.SetModeratorAddress(ctx, moderator)
-	if err != nil {
-		panic(err)
+	if data.BaseAddress != "" {
+		if _, err := sdk.AccAddressFromBech32(data.BaseAddress); err != nil {
+			panic(fmt.Sprintf("invalid base address: %s. Error: %s", data.BaseAddress, err))
+		}
+		base := types.Base{
+			Address: data.BaseAddress,
+		}
+		err = k.SetBaseAddress(ctx, base)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

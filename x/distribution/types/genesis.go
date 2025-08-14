@@ -50,11 +50,13 @@ func DefaultGenesisState() *GenesisState {
 
 // ValidateGenesis validates the genesis state of distribution genesis input
 func ValidateGenesis(gs *GenesisState) error {
-	if err := validateAddress(gs.ModeratorAddress); err != nil {
-		return err
-	}
-	if err := validateAddress(gs.BaseAddress); err != nil {
-		return err
+	if gs.BaseAddress != "" {
+		if err := validateAddress(gs.ModeratorAddress); err != nil {
+			return err
+		}
+		if err := validateAddress(gs.BaseAddress); err != nil {
+			return err
+		}
 	}
 	if err := gs.Params.ValidateBasic(); err != nil {
 		return err

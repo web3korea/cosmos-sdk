@@ -133,7 +133,7 @@ func (k msgServer) ChangeRatio(goCtx context.Context, msg *types.MsgChangeRatio)
 	}
 
 	if msg.ModeratorAddress != moderator.Address {
-		return nil, types.ErrInvalidModerator.Wrapf("expected: %s, got: %s", moderator, msg.ModeratorAddress)
+		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
 	}
 
 	if err := msg.Ratio.ValidateRatio(); err != nil {
@@ -157,7 +157,7 @@ func (k msgServer) ChangeBaseAddress(goCtx context.Context, msg *types.MsgChange
 	}
 
 	if msg.ModeratorAddress != moderator.Address {
-		return nil, types.ErrInvalidModerator.Wrapf("expected: %s, got: %s", moderator, msg.ModeratorAddress)
+		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
 	}
 
 	if _, err := sdk.AccAddressFromBech32(msg.NewBaseAddress); err != nil {
@@ -181,7 +181,7 @@ func (k msgServer) ChangeModerator(goCtx context.Context, msg *types.MsgChangeMo
 	}
 
 	if msg.ModeratorAddress != moderator.Address {
-		return nil, types.ErrInvalidModerator.Wrapf("expected: %s, got: %s", moderator, msg.ModeratorAddress)
+		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
 	}
 
 	if _, err := sdk.AccAddressFromBech32(msg.NewModeratorAddress); err != nil {

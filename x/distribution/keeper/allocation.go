@@ -53,27 +53,30 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 		logger.Info("Fee Distribution", "type", types.EventTypeBurnFee, "proportion", ratio.Burn, "amount", burnFee.String())
 
 		// base fee: ratio.Base
+		var baseFee sdk.Coins
 		base, err := k.GetBaseAddress(sdkCtx)
-		if err != nil {
-			return err
+		if err == nil && base.Address != "" {
+			baseAddr, err := sdk.AccAddressFromBech32(base.Address)
+			if err != nil {
+				return err
+			}
+			baseFee = k.CalculatePercentage(feesCollectedInt, ratio.Base)
+			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, baseAddr, baseFee)
+			if err != nil {
+				panic(err)
+			}
+			// emit base fee
+			sdkCtx.EventManager().EmitEvent(
+				sdk.NewEvent(
+					types.EventTypeBaseFee,
+					sdk.NewAttribute(sdk.AttributeKeyAmount, baseFee.String()),
+				),
+			)
+			logger.Info("Fee Distribution", "type", types.EventTypeBaseFee, "proportion", ratio.Base, "amount", baseFee.String())
+		} else {
+			logger.Info("No base address found, base proportion will be added to staking rewards")
+			ratio.StakingRewards = ratio.StakingRewards.Add(ratio.Base)
 		}
-		baseAddr, err := sdk.AccAddressFromBech32(base.Address)
-		if err != nil {
-			return err
-		}
-		baseFee := k.CalculatePercentage(feesCollectedInt, ratio.Base)
-		err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, baseAddr, baseFee)
-		if err != nil {
-			panic(err)
-		}
-		// emit base fee
-		sdkCtx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				types.EventTypeBaseFee,
-				sdk.NewAttribute(sdk.AttributeKeyAmount, baseFee.String()),
-			),
-		)
-		logger.Info("Fee Distribution", "type", types.EventTypeBaseFee, "proportion", ratio.Base, "amount", baseFee.String())
 
 		feesCollectedInt = feesCollectedInt.Sub(burnFee...).Sub(baseFee...)
 		feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
