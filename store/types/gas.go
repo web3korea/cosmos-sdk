@@ -234,7 +234,7 @@ func KVGasConfig() GasConfig {
 		HasCost:          200,
 		DeleteCost:       200,
 		ReadCostFlat:     200,
-		ReadCostPerByte:  2,
+		ReadCostPerByte:  3,
 		WriteCostFlat:    400,
 		WriteCostPerByte: 6,
 		IterNextCostFlat: 6,
