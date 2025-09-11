@@ -404,3 +404,9 @@ func (k Querier) Moderator(ctx context.Context, req *types.QueryModeratorRequest
 
 	return &types.QueryModeratorResponse{ModeratorAddress: moderator.Address}, nil
 }
+
+// TotalBurned queries the total burned amount by the module since last reset
+func (k Querier) TotalBurned(ctx context.Context, req *types.QueryTotalBurnedRequest) (*types.QueryTotalBurnedResponse, error) {
+	totalBurned := k.GetTotalBurned(ctx)
+	return &types.QueryTotalBurnedResponse{TotalBurned: totalBurned}, nil
+}

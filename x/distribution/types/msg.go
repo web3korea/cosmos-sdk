@@ -1,6 +1,7 @@
 package types
 
 import (
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -15,6 +16,7 @@ var (
 	_ sdk.Msg = (*MsgChangeRatio)(nil)
 	_ sdk.Msg = (*MsgChangeBaseAddress)(nil)
 	_ sdk.Msg = (*MsgChangeModerator)(nil)
+	_ sdk.Msg = (*MsgResetTotalBurned)(nil)
 )
 
 func NewMsgSetWithdrawAddress(delAddr, withdrawAddr sdk.AccAddress) *MsgSetWithdrawAddress {
@@ -77,5 +79,14 @@ func NewMsgChangeModerator(moderator sdk.AccAddress, newModerator sdk.AccAddress
 	return &MsgChangeModerator{
 		ModeratorAddress:    moderator.String(),
 		NewModeratorAddress: newModerator.String(),
+	}
+}
+
+// NewMsgResetTotalBurned returns a new MsgResetTotalBurned with a new total burned
+func NewMsgResetTotalBurned(moderator sdk.AccAddress, denom string, amount math.Int) *MsgResetTotalBurned {
+	return &MsgResetTotalBurned{
+		ModeratorAddress: moderator.String(),
+		Denom:            denom,
+		Amount:           amount,
 	}
 }

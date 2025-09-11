@@ -47,6 +47,7 @@ func NewTxCmd(valAc, ac address.Codec) *cobra.Command {
 		NewChangeRatioCmd(),
 		NewChangeBaseAddressCmd(),
 		NewChangeModeratorCmd(),
+		NewResetTotalBurnedCmd(),
 	)
 
 	return distTxCmd
@@ -408,6 +409,44 @@ $ %s tx distribution change-moderator [new_moderator_address] --from [moderator_
 			newModeratorAddress := sdk.MustAccAddressFromBech32(args[0])
 
 			msg := types.NewMsgChangeModerator(moderatorAddr, newModeratorAddress)
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// NewResetTotalBurnedCmd returns a CLI command handler for creating a MsgResetTotalBurned transaction.
+func NewResetTotalBurnedCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "reset-total-burned [denom] [amount]",
+		Args:  cobra.ExactArgs(1),
+		Short: "Resets the total burned amount for the given denom",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Resets the total burned amount for the given denom
+
+Example:
+$ %s tx distribution reset-total-burned [denom] [amount] --from [moderator_address]
+`,
+				version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			moderatorAddr := clientCtx.GetFromAddress()
+			coinStr := args[0]
+			coin, err := sdk.ParseCoinNormalized(coinStr)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgResetTotalBurned(moderatorAddr, coin.Denom, coin.Amount)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

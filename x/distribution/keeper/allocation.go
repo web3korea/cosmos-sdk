@@ -42,6 +42,10 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 		if err != nil {
 			panic(err)
 		}
+		err = k.AddTotalBurned(ctx, burnFee)
+		if err != nil {
+			return err
+		}
 
 		// emit burn fee
 		sdkCtx.EventManager().EmitEvent(

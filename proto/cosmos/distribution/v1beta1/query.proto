@@ -78,6 +78,11 @@ service Query {
     option (google.api.http).get = "/cosmos/distribution/v1beta1/ratio";
   }
 
+  // TotalBurned returns the total burned amount by the module since last reset
+  rpc TotalBurned(QueryTotalBurnedRequest) returns (QueryTotalBurnedResponse) {
+    option (google.api.http).get = "/cosmos/distribution/v1beta1/total_burned";
+  }
+
   // BurnAddress queries the base_address for 1/3 fee
   rpc BaseAddress(QueryBaseAddressRequest) returns (QueryBaseAddressResponse) {
     option (google.api.http).get = "/cosmos/distribution/v1beta1/base_address";
@@ -279,6 +284,21 @@ message QueryRatioRequest {}
 // RPC method
 message QueryRatioResponse {
   Ratio ratio = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryTotalBurnedRequest is the request for the Query/TotalBurned
+// RPC method
+message QueryTotalBurnedRequest {}
+
+// QueryTotalBurnedResponse is the response type for the Query/TotalBurned
+// RPC method
+message QueryTotalBurnedResponse {
+  repeated cosmos.base.v1beta1.Coin total_burned = 1 [
+    (gogoproto.nullable)     = false,
+    (amino.dont_omitempty)   = true,
+    (amino.encoding)         = "legacy_coins",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
 // QueryBaseAddressRequest is the request for the Query/BurnAddress

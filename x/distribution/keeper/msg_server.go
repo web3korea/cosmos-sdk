@@ -124,14 +124,17 @@ func (k msgServer) FundCommunityPool(ctx context.Context, msg *types.MsgFundComm
 	return &types.MsgFundCommunityPoolResponse{}, nil
 }
 
+// ChangeRatio changes the ratio
 func (k msgServer) ChangeRatio(goCtx context.Context, msg *types.MsgChangeRatio) (*types.MsgChangeRatioResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// validate the moderator address
 	moderator, err := k.GetModeratorAddress(ctx)
 	if err != nil {
 		return nil, err
 	}
 
+	// validate the new ratio
 	if msg.ModeratorAddress != moderator.Address {
 		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
 	}
@@ -140,6 +143,7 @@ func (k msgServer) ChangeRatio(goCtx context.Context, msg *types.MsgChangeRatio)
 		return nil, errors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid ratio: %s. Error: %s", msg.Ratio, err)
 	}
 
+	// set the new ratio
 	err = k.Keeper.SetRatio(ctx, msg.Ratio)
 	if err != nil {
 		return nil, err
@@ -148,14 +152,17 @@ func (k msgServer) ChangeRatio(goCtx context.Context, msg *types.MsgChangeRatio)
 	return &types.MsgChangeRatioResponse{}, nil
 }
 
+// ChangeBaseAddress changes the base address
 func (k msgServer) ChangeBaseAddress(goCtx context.Context, msg *types.MsgChangeBaseAddress) (*types.MsgChangeBaseAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// validate the moderator address
 	moderator, err := k.GetModeratorAddress(ctx)
 	if err != nil {
 		return nil, err
 	}
 
+	// validate the new base address
 	if msg.ModeratorAddress != moderator.Address {
 		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
 	}
@@ -164,6 +171,7 @@ func (k msgServer) ChangeBaseAddress(goCtx context.Context, msg *types.MsgChange
 		return nil, sdkerrors.ErrInvalidAddress.Wrapf("invalid new base address: %s", err)
 	}
 
+	// set the new base address
 	err = k.Keeper.SetBaseAddress(ctx, types.Base{Address: msg.NewBaseAddress})
 	if err != nil {
 		return nil, err
@@ -172,9 +180,39 @@ func (k msgServer) ChangeBaseAddress(goCtx context.Context, msg *types.MsgChange
 	return &types.MsgChangeBaseAddressResponse{}, nil
 }
 
+// ChangeModerator changes the moderator address
 func (k msgServer) ChangeModerator(goCtx context.Context, msg *types.MsgChangeModerator) (*types.MsgChangeModeratorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// validate the moderator address
+	moderator, err := k.GetModeratorAddress(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// validate the new moderator address
+	if msg.ModeratorAddress != moderator.Address {
+		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.NewModeratorAddress); err != nil {
+		return nil, sdkerrors.ErrInvalidAddress.Wrapf("invalid new moderator address: %s", err)
+	}
+
+	// set the new moderator address
+	err = k.Keeper.SetModeratorAddress(ctx, types.Moderator{Address: msg.NewModeratorAddress})
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgChangeModeratorResponse{}, nil
+}
+
+// ResetTotalBurned resets the total burned amount for the given denom
+func (k msgServer) ResetTotalBurned(goCtx context.Context, msg *types.MsgResetTotalBurned) (*types.MsgResetTotalBurnedResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// validate the moderator address
 	moderator, err := k.GetModeratorAddress(ctx)
 	if err != nil {
 		return nil, err
@@ -184,16 +222,31 @@ func (k msgServer) ChangeModerator(goCtx context.Context, msg *types.MsgChangeMo
 		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
 	}
 
-	if _, err := sdk.AccAddressFromBech32(msg.NewModeratorAddress); err != nil {
-		return nil, sdkerrors.ErrInvalidAddress.Wrapf("invalid new moderator address: %s", err)
+	// get the total burned amount
+	totalBurned := k.Keeper.GetTotalBurned(ctx)
+
+	found := false
+	// update the total burned amount
+	for i, coin := range totalBurned {
+		// if the denom exists, update the amount
+		if coin.Denom == msg.Denom {
+			totalBurned[i] = sdk.NewCoin(msg.Denom, msg.Amount)
+			found = true
+			break
+		}
 	}
 
-	err = k.Keeper.SetModeratorAddress(ctx, types.Moderator{Address: msg.NewModeratorAddress})
-	if err != nil {
+	if !found {
+		// Add the new denom if it doesn't exist
+		totalBurned = totalBurned.Add(sdk.NewCoin(msg.Denom, msg.Amount))
+	}
+
+	// Save the updated totalBurned
+	if err := k.Keeper.SetTotalBurned(ctx, totalBurned); err != nil {
 		return nil, err
 	}
 
-	return &types.MsgChangeModeratorResponse{}, nil
+	return &types.MsgResetTotalBurnedResponse{}, nil
 }
 
 func (k msgServer) UpdateParams(ctx context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {

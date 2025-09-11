@@ -212,10 +212,22 @@ message Ratio {
   ];
 }
 
+// moderator address
 message Moderator {
   string address = 1;
 }
 
+// base address
 message Base {
   string address = 1;
+}
+
+// message to store the total burned amount
+message BurnFee {
+  repeated cosmos.base.v1beta1.Coin total_burned = 1 [
+    (gogoproto.nullable)     = false,
+    (amino.dont_omitempty)   = true,
+    (amino.encoding)         = "legacy_coins",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }

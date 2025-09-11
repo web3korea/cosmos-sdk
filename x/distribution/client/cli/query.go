@@ -35,6 +35,7 @@ func GetQueryCmd() *cobra.Command {
 		GetCmdQueryRatio(),
 		GetCmdQueryBaseAddress(),
 		GetCmdQueryModerator(),
+		GetCmdQueryTotalBurned(),
 	)
 
 	return distQueryCmd
@@ -461,6 +462,41 @@ $ %s query distribution moderator-address
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.Moderator(cmd.Context(), &types.QueryModeratorRequest{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+// GetCmdQueryTotalBurned returns the command for fetching total burned info.
+func GetCmdQueryTotalBurned() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "total-burned",
+		Args:  cobra.NoArgs,
+		Short: "Query the total burned amount by the module since last reset",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query the total burned amount by the module since last reset.
+
+Example:
+$ %s query distribution total-burned
+`,
+				version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.TotalBurned(cmd.Context(), &types.QueryTotalBurnedRequest{})
 			if err != nil {
 				return err
 			}

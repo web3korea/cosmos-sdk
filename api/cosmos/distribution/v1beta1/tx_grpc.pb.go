@@ -26,6 +26,7 @@ const (
 	Msg_ChangeRatio_FullMethodName                 = "/cosmos.distribution.v1beta1.Msg/ChangeRatio"
 	Msg_ChangeBaseAddress_FullMethodName           = "/cosmos.distribution.v1beta1.Msg/ChangeBaseAddress"
 	Msg_ChangeModerator_FullMethodName             = "/cosmos.distribution.v1beta1.Msg/ChangeModerator"
+	Msg_ResetTotalBurned_FullMethodName            = "/cosmos.distribution.v1beta1.Msg/ResetTotalBurned"
 	Msg_UpdateParams_FullMethodName                = "/cosmos.distribution.v1beta1.Msg/UpdateParams"
 	Msg_CommunityPoolSpend_FullMethodName          = "/cosmos.distribution.v1beta1.Msg/CommunityPoolSpend"
 	Msg_DepositValidatorRewardsPool_FullMethodName = "/cosmos.distribution.v1beta1.Msg/DepositValidatorRewardsPool"
@@ -57,6 +58,8 @@ type MsgClient interface {
 	ChangeBaseAddress(ctx context.Context, in *MsgChangeBaseAddress, opts ...grpc.CallOption) (*MsgChangeBaseAddressResponse, error)
 	// ChangeModerator defines a method to allow changing the moderator
 	ChangeModerator(ctx context.Context, in *MsgChangeModerator, opts ...grpc.CallOption) (*MsgChangeModeratorResponse, error)
+	// ResetTotalBurned defines a method to reset total_burned for the given denom
+	ResetTotalBurned(ctx context.Context, in *MsgResetTotalBurned, opts ...grpc.CallOption) (*MsgResetTotalBurnedResponse, error)
 	// UpdateParams defines a governance operation for updating the x/distribution
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
@@ -150,6 +153,16 @@ func (c *msgClient) ChangeModerator(ctx context.Context, in *MsgChangeModerator,
 	return out, nil
 }
 
+func (c *msgClient) ResetTotalBurned(ctx context.Context, in *MsgResetTotalBurned, opts ...grpc.CallOption) (*MsgResetTotalBurnedResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgResetTotalBurnedResponse)
+	err := c.cc.Invoke(ctx, Msg_ResetTotalBurned_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MsgUpdateParamsResponse)
@@ -206,6 +219,8 @@ type MsgServer interface {
 	ChangeBaseAddress(context.Context, *MsgChangeBaseAddress) (*MsgChangeBaseAddressResponse, error)
 	// ChangeModerator defines a method to allow changing the moderator
 	ChangeModerator(context.Context, *MsgChangeModerator) (*MsgChangeModeratorResponse, error)
+	// ResetTotalBurned defines a method to reset total_burned for the given denom
+	ResetTotalBurned(context.Context, *MsgResetTotalBurned) (*MsgResetTotalBurnedResponse, error)
 	// UpdateParams defines a governance operation for updating the x/distribution
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
@@ -249,6 +264,9 @@ func (UnimplementedMsgServer) ChangeBaseAddress(context.Context, *MsgChangeBaseA
 }
 func (UnimplementedMsgServer) ChangeModerator(context.Context, *MsgChangeModerator) (*MsgChangeModeratorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeModerator not implemented")
+}
+func (UnimplementedMsgServer) ResetTotalBurned(context.Context, *MsgResetTotalBurned) (*MsgResetTotalBurnedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetTotalBurned not implemented")
 }
 func (UnimplementedMsgServer) UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
@@ -406,6 +424,24 @@ func _Msg_ChangeModerator_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_ResetTotalBurned_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgResetTotalBurned)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).ResetTotalBurned(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_ResetTotalBurned_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).ResetTotalBurned(ctx, req.(*MsgResetTotalBurned))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgUpdateParams)
 	if err := dec(in); err != nil {
@@ -494,6 +530,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChangeModerator",
 			Handler:    _Msg_ChangeModerator_Handler,
+		},
+		{
+			MethodName: "ResetTotalBurned",
+			Handler:    _Msg_ResetTotalBurned_Handler,
 		},
 		{
 			MethodName: "UpdateParams",

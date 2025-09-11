@@ -30,6 +30,7 @@ const (
 	Query_DelegatorWithdrawAddress_FullMethodName    = "/cosmos.distribution.v1beta1.Query/DelegatorWithdrawAddress"
 	Query_CommunityPool_FullMethodName               = "/cosmos.distribution.v1beta1.Query/CommunityPool"
 	Query_Ratio_FullMethodName                       = "/cosmos.distribution.v1beta1.Query/Ratio"
+	Query_TotalBurned_FullMethodName                 = "/cosmos.distribution.v1beta1.Query/TotalBurned"
 	Query_BaseAddress_FullMethodName                 = "/cosmos.distribution.v1beta1.Query/BaseAddress"
 	Query_Moderator_FullMethodName                   = "/cosmos.distribution.v1beta1.Query/Moderator"
 )
@@ -65,6 +66,8 @@ type QueryClient interface {
 	CommunityPool(ctx context.Context, in *QueryCommunityPoolRequest, opts ...grpc.CallOption) (*QueryCommunityPoolResponse, error)
 	// Ratio queries the tx fee distribution ratio
 	Ratio(ctx context.Context, in *QueryRatioRequest, opts ...grpc.CallOption) (*QueryRatioResponse, error)
+	// TotalBurned returns the total burned amount by the module since last reset
+	TotalBurned(ctx context.Context, in *QueryTotalBurnedRequest, opts ...grpc.CallOption) (*QueryTotalBurnedResponse, error)
 	// BurnAddress queries the base_address for 1/3 fee
 	BaseAddress(ctx context.Context, in *QueryBaseAddressRequest, opts ...grpc.CallOption) (*QueryBaseAddressResponse, error)
 	// Moderator queries the moderator
@@ -189,6 +192,16 @@ func (c *queryClient) Ratio(ctx context.Context, in *QueryRatioRequest, opts ...
 	return out, nil
 }
 
+func (c *queryClient) TotalBurned(ctx context.Context, in *QueryTotalBurnedRequest, opts ...grpc.CallOption) (*QueryTotalBurnedResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryTotalBurnedResponse)
+	err := c.cc.Invoke(ctx, Query_TotalBurned_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) BaseAddress(ctx context.Context, in *QueryBaseAddressRequest, opts ...grpc.CallOption) (*QueryBaseAddressResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(QueryBaseAddressResponse)
@@ -240,6 +253,8 @@ type QueryServer interface {
 	CommunityPool(context.Context, *QueryCommunityPoolRequest) (*QueryCommunityPoolResponse, error)
 	// Ratio queries the tx fee distribution ratio
 	Ratio(context.Context, *QueryRatioRequest) (*QueryRatioResponse, error)
+	// TotalBurned returns the total burned amount by the module since last reset
+	TotalBurned(context.Context, *QueryTotalBurnedRequest) (*QueryTotalBurnedResponse, error)
 	// BurnAddress queries the base_address for 1/3 fee
 	BaseAddress(context.Context, *QueryBaseAddressRequest) (*QueryBaseAddressResponse, error)
 	// Moderator queries the moderator
@@ -286,6 +301,9 @@ func (UnimplementedQueryServer) CommunityPool(context.Context, *QueryCommunityPo
 }
 func (UnimplementedQueryServer) Ratio(context.Context, *QueryRatioRequest) (*QueryRatioResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ratio not implemented")
+}
+func (UnimplementedQueryServer) TotalBurned(context.Context, *QueryTotalBurnedRequest) (*QueryTotalBurnedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TotalBurned not implemented")
 }
 func (UnimplementedQueryServer) BaseAddress(context.Context, *QueryBaseAddressRequest) (*QueryBaseAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BaseAddress not implemented")
@@ -512,6 +530,24 @@ func _Query_Ratio_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_TotalBurned_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryTotalBurnedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).TotalBurned(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_TotalBurned_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).TotalBurned(ctx, req.(*QueryTotalBurnedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_BaseAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryBaseAddressRequest)
 	if err := dec(in); err != nil {
@@ -598,6 +634,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Ratio",
 			Handler:    _Query_Ratio_Handler,
+		},
+		{
+			MethodName: "TotalBurned",
+			Handler:    _Query_TotalBurned_Handler,
 		},
 		{
 			MethodName: "BaseAddress",

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"cosmossdk.io/collections"
@@ -26,9 +27,10 @@ type Keeper struct {
 	// should be the x/gov module account.
 	authority string
 
-	Schema  collections.Schema
-	Params  collections.Item[types.Params]
-	FeePool collections.Item[types.FeePool]
+	Schema      collections.Schema
+	Params      collections.Item[types.Params]
+	FeePool     collections.Item[types.FeePool]
+	TotalBurned collections.Item[types.BurnFee]
 
 	feeCollectorName string // name of the FeeCollector ModuleAccount
 
@@ -76,6 +78,7 @@ func NewKeeper(
 		authority:             authority,
 		Params:                collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		FeePool:               collections.NewItem(sb, types.FeePoolKey, "fee_pool", codec.CollValue[types.FeePool](cdc)),
+		TotalBurned:           collections.NewItem(sb, types.TotalBurnedKey, "total_burned", codec.CollValue[types.BurnFee](cdc)),
 		externalCommunityPool: nil,
 	}
 
@@ -258,4 +261,34 @@ func (k Keeper) FundCommunityPool(ctx context.Context, amount sdk.Coins, sender 
 
 	feePool.CommunityPool = feePool.CommunityPool.Add(sdk.NewDecCoinsFromCoins(amount...)...)
 	return k.FeePool.Set(ctx, feePool)
+}
+
+// GetTotalBurned returns the total amount of burned tokens
+func (k Keeper) GetTotalBurned(ctx context.Context) (totalBurned sdk.Coins) {
+	burnFee, err := k.TotalBurned.Get(ctx)
+	if err != nil {
+		return sdk.NewCoins()
+	}
+	return burnFee.TotalBurned
+}
+
+// SetTotalBurned sets the total amount of burned tokens
+func (k Keeper) SetTotalBurned(ctx context.Context, totalBurned sdk.Coins) error {
+	return k.TotalBurned.Set(ctx, types.BurnFee{TotalBurned: totalBurned})
+}
+
+// AddTotalBurned adds the total amount of burned tokens
+func (k Keeper) AddTotalBurned(ctx context.Context, toAdd sdk.Coins) error {
+	burnFee, err := k.TotalBurned.Get(ctx)
+	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			// initialize with empty balance
+			burnFee = types.BurnFee{TotalBurned: sdk.NewCoins()}
+		} else {
+			return err
+		}
+	}
+
+	burnFee.TotalBurned = burnFee.TotalBurned.Add(toAdd...)
+	return k.TotalBurned.Set(ctx, burnFee)
 }

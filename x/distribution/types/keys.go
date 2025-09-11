@@ -60,6 +60,7 @@ var (
 	ModeratorAddrKey = []byte{0x10} // key for storing the moderator
 	BaseAddrKey      = []byte{0x11} // key for storing the base address
 	RatioKey         = []byte{0x12} // key for storing the distribution ratio
+	TotalBurnedKey   = []byte{0x13} // key for storing the total burned
 )
 
 // GetValidatorOutstandingRewardsAddress creates an address from a validator's outstanding rewards key.
