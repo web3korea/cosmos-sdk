@@ -422,14 +422,14 @@ $ %s tx distribution change-moderator [new_moderator_address] --from [moderator_
 // NewResetTotalBurnedCmd returns a CLI command handler for creating a MsgResetTotalBurned transaction.
 func NewResetTotalBurnedCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "reset-total-burned [denom] [amount]",
+		Use:   "reset-total-burned [coin]",
 		Args:  cobra.ExactArgs(1),
 		Short: "Resets the total burned amount for the given denom",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Resets the total burned amount for the given denom
 
 Example:
-$ %s tx distribution reset-total-burned [denom] [amount] --from [moderator_address]
+$ %s tx distribution reset-total-burned [coin] --from [moderator_address]
 `,
 				version.AppName,
 			),
