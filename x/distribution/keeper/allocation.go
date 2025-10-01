@@ -22,7 +22,7 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 	// (and distributed to the previous proposer)
 	feeCollector := k.authKeeper.GetModuleAccount(ctx, k.feeCollectorName)
 	feesCollectedInt := k.bankKeeper.GetAllBalances(ctx, feeCollector.GetAddress())
-	// feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
+	feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
 
 	// transfer collected fees to the distribution module account
 	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, k.feeCollectorName, types.ModuleName, feesCollectedInt)
@@ -35,13 +35,24 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 		if err != nil {
 			return err
 		}
+		remaining := feesCollected
+
+		// community tax
+		communityTax, err := k.GetCommunityTax(ctx)
+		if err != nil {
+			return err
+		}
+		voteMultiplier := math.LegacyOneDec().Sub(communityTax)
+		feeMultiplier := feesCollected.MulDecTruncate(voteMultiplier)
 
 		// burn fee: ratio.Burn
-		burnFee := k.CalculatePercentage(feesCollectedInt, ratio.Burn)
+		burnFee := k.CalculatePercentage(feeMultiplier, ratio.Burn)
+		burnFeeDec := sdk.NewDecCoinsFromCoins(burnFee...)
 		err = k.bankKeeper.BurnCoins(ctx, types.ModuleName, burnFee)
 		if err != nil {
 			panic(err)
 		}
+		remaining = remaining.Sub(burnFeeDec)
 		err = k.AddTotalBurned(ctx, burnFee)
 		if err != nil {
 			return err
@@ -54,21 +65,23 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 				sdk.NewAttribute(sdk.AttributeKeyAmount, burnFee.String()),
 			),
 		)
-		logger.Info("Fee Distribution", "type", types.EventTypeBurnFee, "proportion", ratio.Burn, "amount", burnFee.String())
 
 		// base fee: ratio.Base
 		var baseFee sdk.Coins
+		var baseFeeDec sdk.DecCoins
 		base, err := k.GetBaseAddress(sdkCtx)
 		if err == nil && base.Address != "" {
 			baseAddr, err := sdk.AccAddressFromBech32(base.Address)
 			if err != nil {
 				return err
 			}
-			baseFee = k.CalculatePercentage(feesCollectedInt, ratio.Base)
+			baseFee = k.CalculatePercentage(feeMultiplier, ratio.Base)
+			baseFeeDec = sdk.NewDecCoinsFromCoins(baseFee...)
 			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, baseAddr, baseFee)
 			if err != nil {
 				panic(err)
 			}
+			remaining = remaining.Sub(baseFeeDec)
 			// emit base fee
 			sdkCtx.EventManager().EmitEvent(
 				sdk.NewEvent(
@@ -76,15 +89,13 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 					sdk.NewAttribute(sdk.AttributeKeyAmount, baseFee.String()),
 				),
 			)
-			logger.Info("Fee Distribution", "type", types.EventTypeBaseFee, "proportion", ratio.Base, "amount", baseFee.String())
 		} else {
 			logger.Info("No base address found, base proportion will be added to staking rewards")
 			ratio.StakingRewards = ratio.StakingRewards.Add(ratio.Base)
 		}
 
-		feesCollectedInt = feesCollectedInt.Sub(burnFee...).Sub(baseFee...)
-		feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
-		logger.Info("Fee Distributions", "type", types.EventTypeStakingRewards, "proportion", ratio.StakingRewards, "amount", feesCollected.String())
+		// feesCollectedInt = feesCollectedInt.Sub(burnFee...).Sub(baseFee...)
+		feeMultiplier = feeMultiplier.Sub(burnFeeDec).Sub(baseFeeDec)
 
 		// temporary workaround to keep CanWithdrawInvariant happy
 		// general discussions here: https://github.com/cosmos/cosmos-sdk/issues/2906#issuecomment-441867634
@@ -97,16 +108,6 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 			feePool.CommunityPool = feePool.CommunityPool.Add(feesCollected...)
 			return k.FeePool.Set(ctx, feePool)
 		}
-
-		// calculate fraction allocated to validators
-		remaining := feesCollected
-		communityTax, err := k.GetCommunityTax(ctx)
-		if err != nil {
-			return err
-		}
-
-		voteMultiplier := math.LegacyOneDec().Sub(communityTax)
-		feeMultiplier := feesCollected.MulDecTruncate(voteMultiplier)
 
 		// allocate tokens proportionally to voting power
 		//
@@ -135,6 +136,15 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 
 		// allocate community funding
 		feePool.CommunityPool = feePool.CommunityPool.Add(remaining...)
+
+		// log
+		logger.Info("Fee Distribution",
+			types.EventTypeTotalFees, feesCollected.String(),
+			types.EventTypeBurnFee, burnFeeDec.String(),
+			types.EventTypeBaseFee, baseFeeDec.String(),
+			types.EventTypeStakingRewards, feeMultiplier.String(),
+			types.EventTypeCommunityPool, remaining.String())
+
 		return k.FeePool.Set(ctx, feePool)
 	}
 	return nil
@@ -231,12 +241,14 @@ func (k Keeper) sendCommunityPoolToExternalPool(ctx sdk.Context) error {
 	return k.FeePool.Set(ctx, types.FeePool{CommunityPool: remaining})
 }
 
-func (k Keeper) CalculatePercentage(coins sdk.Coins, percentage math.LegacyDec) sdk.Coins {
+func (k Keeper) CalculatePercentage(coins sdk.DecCoins, percentage math.LegacyDec) sdk.Coins {
 	var result sdk.Coins
 	for _, coin := range coins {
-		// Calculate percentage of the coin's amount
-		amount := percentage.MulInt(coin.Amount).TruncateInt()
-		result = result.Add(sdk.NewCoin(coin.Denom, amount))
+		// Multiply decimal amount by percentage, then truncate to integer
+		amount := coin.Amount.MulTruncate(percentage).TruncateInt()
+		if amount.IsPositive() {
+			result = result.Add(sdk.NewCoin(coin.Denom, amount))
+		}
 	}
 	return result
 }

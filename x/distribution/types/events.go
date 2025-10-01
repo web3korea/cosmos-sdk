@@ -14,6 +14,8 @@ const (
 	EventTypeBurnFee            = "burn_fee"
 	EventTypeBaseFee            = "base_fee"
 	EventTypeStakingRewards     = "staking_rewards"
+	EventTypeCommunityPool      = "community_pool"
+	EventTypeTotalFees          = "total_fees"
 
 	AttributeKeyWithdrawAddress = "withdraw_address"
 	AttributeKeyValidator       = "validator"
