@@ -50,7 +50,7 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 		burnFeeDec := sdk.NewDecCoinsFromCoins(burnFee...)
 		err = k.bankKeeper.BurnCoins(ctx, types.ModuleName, burnFee)
 		if err != nil {
-			panic(err)
+			return err
 		}
 		remaining = remaining.Sub(burnFeeDec)
 		err = k.AddTotalBurned(ctx, burnFee)
@@ -79,7 +79,7 @@ func (k Keeper) AllocateTokens(ctx context.Context, totalPreviousPower int64, bo
 			baseFeeDec = sdk.NewDecCoinsFromCoins(baseFee...)
 			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, baseAddr, baseFee)
 			if err != nil {
-				panic(err)
+				return err
 			}
 			remaining = remaining.Sub(baseFeeDec)
 			// emit base fee
