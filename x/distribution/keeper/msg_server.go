@@ -222,6 +222,10 @@ func (k msgServer) ResetTotalBurned(goCtx context.Context, msg *types.MsgResetTo
 		return nil, types.ErrInvalidModerator.Wrapf("invalid moderator address. expected: %s, got: %s", moderator.Address, msg.ModeratorAddress)
 	}
 
+	if msg.Amount.IsNil() || msg.Amount.IsNegative() {
+		return nil, errors.Wrapf(sdkerrors.ErrInvalidRequest, "amount cannot be nil or negative")
+	}
+
 	// get the total burned amount
 	totalBurned := k.Keeper.GetTotalBurned(ctx)
 
