@@ -1,0 +1,58 @@
+name: Cursor 코드 리뷰
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+        - name: Checkout repository
+            uses: actions/checkout@v4
+            with:
+            fetch-depth: 0
+            ref: ${{ github.event.pull_request.head.sha }}
+        - name: Install Cursor CLI
+            run: |
+                curl https://cursor.com/install -fsS | bash
+                echo "$HOME/.cursor/bin" >> $GITHUB_PATH
+
+        - name: Perform code review
+            env:
+              CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+              GH_TOKEN: ${{ github.token }}
+            run: |
+              agent --force --model "$MODEL" --output-format=text --print "GitHub Actions 러너에서 자동화된 코드 리뷰를 수행 중입니다. gh CLI를 사용할 수 있으며 GH_TOKEN으로 인증되었습니다. 풀 리퀘스트에 댓글을 남길 수 있습니다.
+          
+              컨텍스트:
+              - 저장소: ${{ github.repository }}
+              - PR 번호: ${{ github.event.pull_request.number }}
+              - PR Head SHA: ${{ github.event.pull_request.head.sha }}
+              - PR Base SHA: ${{ github.event.pull_request.base.sha }}
+          
+              목표:
+              1) 기존 리뷰 댓글을 재확인하고 해결된 경우 resolved로 응답
+              2) 현재 PR diff를 검토하여 명확하고 심각도가 높은 이슈만 표시
+              3) 변경된 라인에만 매우 짧은 인라인 댓글(1-2문장)을 남기고 마지막에 간단한 요약 작성
+          
+              절차:
+              - 기존 댓글 가져오기: gh pr view --json comments
+              - diff 가져오기: gh pr diff
+              - 이전에 보고된 이슈가 근처 변경사항으로 수정된 것 같으면 다음과 같이 응답: ✅ 이 이슈는 최근 변경사항으로 해결된 것 같습니다
+              - 중복 방지: 동일하거나 근처 라인에 유사한 피드백이 이미 있으면 건너뛰기
+          
+              댓글 규칙:
+              - 최대 10개의 인라인 댓글; 가장 중요한 이슈 우선 처리
+              - 댓글당 하나의 이슈; 정확히 변경된 라인에 배치
+              - 자연스러운 톤으로 구체적이고 실행 가능하게; 자동화되었거나 높은 신뢰도라고 언급하지 말 것
+              - 이모지 사용: 🚨 중요 🔒 보안 ⚡ 성능 ⚠️ 로직 ✅ 해결됨 ✨ 개선
+          
+              제출:
+              - 인라인 댓글과 간결한 요약이 포함된 하나의 리뷰 제출
+              - 다음만 사용: gh pr review --comment
+              - 사용하지 말 것: gh pr review --approve 또는 --request-changes"
