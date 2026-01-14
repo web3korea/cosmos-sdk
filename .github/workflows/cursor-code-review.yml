@@ -26,6 +26,7 @@ jobs:
           env:
             CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
             GH_TOKEN: ${{ github.token }}
+            MODEL: ${{ vars.MODEL }}
           run: |
               agent --force --model "$MODEL" --output-format=text --print "GitHub Actions 러너에서 자동화된 코드 리뷰를 수행 중입니다. gh CLI를 사용할 수 있으며 GH_TOKEN으로 인증되었습니다. 풀 리퀘스트에 댓글을 남길 수 있습니다.
           
