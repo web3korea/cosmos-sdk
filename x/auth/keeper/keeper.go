@@ -101,6 +101,19 @@ func (ak AccountKeeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+types.ModuleName)
 }
 
+// IsAdmin checks if the given address has admin privileges to set KYC verification status.
+// TODO: In production, this should be configurable or use a more sophisticated admin management system.
+func (ak AccountKeeper) IsAdmin(ctx sdk.Context, addr sdk.AccAddress) bool {
+	// For now, we hardcode an admin address. In production, this should be configurable.
+	// This is a placeholder implementation - proper admin management should be implemented.
+	adminAddr := "cosmos1admin000000000000000000000000000000000" // Placeholder admin address
+	adminAccAddr, err := sdk.AccAddressFromBech32(adminAddr)
+	if err != nil {
+		return false
+	}
+	return addr.Equals(adminAccAddr)
+}
+
 // GetPubKey Returns the PubKey of the account at address
 func (ak AccountKeeper) GetPubKey(ctx sdk.Context, addr sdk.AccAddress) (cryptotypes.PubKey, error) {
 	acc := ak.GetAccount(ctx, addr)

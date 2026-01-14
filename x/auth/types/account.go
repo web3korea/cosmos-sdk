@@ -119,6 +119,17 @@ func (acc *BaseAccount) SetSequence(seq uint64) error {
 	return nil
 }
 
+// GetKycVerified returns the KYC verification status of the account
+func (acc BaseAccount) GetKycVerified() bool {
+	return acc.KycVerified
+}
+
+// SetKycVerified sets the KYC verification status of the account
+func (acc *BaseAccount) SetKycVerified(kycVerified bool) error {
+	acc.KycVerified = kycVerified
+	return nil
+}
+
 // Validate checks for errors on the account fields
 func (acc BaseAccount) Validate() error {
 	if acc.Address == "" || acc.PubKey == nil {

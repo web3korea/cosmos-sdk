@@ -47,6 +47,7 @@ func GetQueryCmd() *cobra.Command {
 		QueryParamsCmd(),
 		QueryModuleAccountsCmd(),
 		QueryModuleAccountByNameCmd(),
+		QueryKycVerifiedCmd(),
 	)
 
 	return cmd
@@ -423,6 +424,39 @@ $ %s query tx --%s=%s <sig1_base64>,<sig2_base64...>
 
 	flags.AddQueryFlagsToCmd(cmd)
 	cmd.Flags().String(flagType, typeHash, fmt.Sprintf("The type to be used when querying tx, can be one of \"%s\", \"%s\", \"%s\"", typeHash, typeAccSeq, typeSig))
+
+	return cmd
+}
+
+// QueryKycVerifiedCmd returns a CLI command handler for querying KYC verification status of an account.
+func QueryKycVerifiedCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "kyc-verified [address]",
+		Short: "Query the KYC verification status of an account",
+		Long:  "Query the KYC verification status of an account",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			req := &types.QueryKycVerifiedRequest{
+				Address: args[0],
+			}
+
+			res, err := queryClient.KycVerified(cmd.Context(), req)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
 
 	return cmd
 }

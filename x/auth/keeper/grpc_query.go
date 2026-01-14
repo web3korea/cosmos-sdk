@@ -19,6 +19,33 @@ import (
 
 var _ types.QueryServer = AccountKeeper{}
 
+func (ak AccountKeeper) KycVerified(c context.Context, req *types.QueryKycVerifiedRequest) (*types.QueryKycVerifiedResponse, error) {
+	if req == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "empty request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+
+	addr, err := sdk.AccAddressFromBech32(req.Address)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid address: %s", err.Error())
+	}
+
+	acc := ak.GetAccount(ctx, addr)
+	if acc == nil {
+		// Return false for non-existent accounts
+		return &types.QueryKycVerifiedResponse{KycVerified: false}, nil
+	}
+
+	baseAcc, ok := acc.(*types.BaseAccount)
+	if !ok {
+		// If not a BaseAccount, return false
+		return &types.QueryKycVerifiedResponse{KycVerified: false}, nil
+	}
+
+	return &types.QueryKycVerifiedResponse{KycVerified: baseAcc.GetKycVerified()}, nil
+}
+
 func (ak AccountKeeper) AccountAddressByID(c context.Context, req *types.QueryAccountAddressByIDRequest) (*types.QueryAccountAddressByIDResponse, error) {
 	if req == nil {
 		return nil, status.Errorf(codes.InvalidArgument, "empty request")

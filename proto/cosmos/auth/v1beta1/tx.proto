@@ -1,0 +1,29 @@
+syntax = "proto3";
+package cosmos.auth.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "cosmos/msg/v1/msg.proto";
+
+option go_package = "github.com/cosmos/cosmos-sdk/x/auth/types";
+
+// Msg defines the auth Msg service.
+service Msg {
+  // SetKycVerified defines a method for setting KYC verification status of an account.
+  rpc SetKycVerified(MsgSetKycVerified) returns (MsgSetKycVerifiedResponse);
+}
+
+// MsgSetKycVerified represents a message to set KYC verification status for an account.
+message MsgSetKycVerified {
+  option (cosmos.msg.v1.signer) = "admin";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string admin         = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string account       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  bool   kyc_verified  = 3;
+}
+
+// MsgSetKycVerifiedResponse defines the Msg/SetKycVerified response type.
+message MsgSetKycVerifiedResponse {}
