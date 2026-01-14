@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	clienttx "github.com/cosmos/cosmos-sdk/client/tx"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	txtypes "github.com/cosmos/cosmos-sdk/types/tx"
@@ -37,7 +37,7 @@ var (
 // Then it tests integrating the 2 AuxSignerData into a
 // client.TxBuilder created by the fee payer.
 func TestBuilderWithAux(t *testing.T) {
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 	testdata.RegisterInterfaces(encCfg.InterfaceRegistry)
 
 	// Create an AuxTxBuilder for tipper (1st signer)

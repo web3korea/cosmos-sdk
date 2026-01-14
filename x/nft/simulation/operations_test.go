@@ -11,7 +11,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
@@ -23,12 +23,12 @@ type SimTestSuite struct {
 	suite.Suite
 
 	ctx sdk.Context
-	app *simulateapp.SimApp
+	app *simapp.SimApp
 }
 
 func (suite *SimTestSuite) SetupTest() {
 	checkTx := false
-	app := simulateapp.Setup(suite.T(), checkTx)
+	app := simapp.Setup(suite.T(), checkTx)
 	suite.app = app
 	suite.ctx = app.BaseApp.NewContext(checkTx, tmproto.Header{})
 }

@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"strings"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 
 	"github.com/cosmos/cosmos-sdk/x/evidence/exported"
 	"github.com/cosmos/cosmos-sdk/x/evidence/types"
@@ -18,7 +18,7 @@ const (
 func (suite *KeeperTestSuite) TestQuerier_QueryEvidence_Existing() {
 	ctx := suite.ctx.WithIsCheckTx(false)
 	numEvidence := 100
-	legacyCdc := simulateapp.MakeTestEncodingConfig().Amino
+	legacyCdc := simapp.MakeTestEncodingConfig().Amino
 
 	evidence := suite.populateEvidence(ctx, numEvidence)
 	query := abci.RequestQuery{
@@ -37,7 +37,7 @@ func (suite *KeeperTestSuite) TestQuerier_QueryEvidence_Existing() {
 
 func (suite *KeeperTestSuite) TestQuerier_QueryEvidence_NonExisting() {
 	ctx := suite.ctx.WithIsCheckTx(false)
-	cdc := simulateapp.MakeTestEncodingConfig().Codec
+	cdc := simapp.MakeTestEncodingConfig().Codec
 	numEvidence := 100
 
 	suite.populateEvidence(ctx, numEvidence)
@@ -53,7 +53,7 @@ func (suite *KeeperTestSuite) TestQuerier_QueryEvidence_NonExisting() {
 
 func (suite *KeeperTestSuite) TestQuerier_QueryAllEvidence() {
 	ctx := suite.ctx.WithIsCheckTx(false)
-	cdc := simulateapp.MakeTestEncodingConfig().Amino
+	cdc := simapp.MakeTestEncodingConfig().Amino
 	numEvidence := 100
 
 	suite.populateEvidence(ctx, numEvidence)
@@ -73,7 +73,7 @@ func (suite *KeeperTestSuite) TestQuerier_QueryAllEvidence() {
 
 func (suite *KeeperTestSuite) TestQuerier_QueryAllEvidence_InvalidPagination() {
 	ctx := suite.ctx.WithIsCheckTx(false)
-	cdc := simulateapp.MakeTestEncodingConfig().Amino
+	cdc := simapp.MakeTestEncodingConfig().Amino
 	numEvidence := 100
 
 	suite.populateEvidence(ctx, numEvidence)

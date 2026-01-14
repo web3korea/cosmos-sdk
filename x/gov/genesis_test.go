@@ -10,7 +10,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -22,9 +22,9 @@ import (
 )
 
 func TestImportExportQueues(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
-	addrs := simulateapp.AddTestAddrs(app, ctx, 2, valTokens)
+	addrs := simapp.AddTestAddrs(app, ctx, 2, valTokens)
 
 	SortAddresses(addrs)
 
@@ -59,7 +59,7 @@ func TestImportExportQueues(t *testing.T) {
 
 	// export the state and import it into a new app
 	govGenState := gov.ExportGenesis(ctx, app.GovKeeper)
-	genesisState := simulateapp.NewDefaultGenesisState(app.AppCodec())
+	genesisState := simapp.NewDefaultGenesisState(app.AppCodec())
 
 	genesisState[authtypes.ModuleName] = app.AppCodec().MustMarshalJSON(authGenState)
 	genesisState[banktypes.ModuleName] = app.AppCodec().MustMarshalJSON(bankGenState)
@@ -73,12 +73,12 @@ func TestImportExportQueues(t *testing.T) {
 	}
 
 	db := dbm.NewMemDB()
-	app2 := simulateapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simulateapp.DefaultNodeHome, 0, simulateapp.MakeTestEncodingConfig(), simulateapp.EmptyAppOptions{})
+	app2 := simapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simapp.DefaultNodeHome, 0, simapp.MakeTestEncodingConfig(), simapp.EmptyAppOptions{})
 
 	app2.InitChain(
 		abci.RequestInitChain{
 			Validators:      []abci.ValidatorUpdate{},
-			ConsensusParams: simulateapp.DefaultConsensusParams,
+			ConsensusParams: simapp.DefaultConsensusParams,
 			AppStateBytes:   stateBytes,
 		},
 	)
@@ -117,7 +117,7 @@ func TestImportExportQueues(t *testing.T) {
 }
 
 func TestImportExportQueues_ErrorUnconsistentState(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	require.Panics(t, func() {
 		gov.InitGenesis(ctx, app.AccountKeeper, app.BankKeeper, app.GovKeeper, &v1.GenesisState{

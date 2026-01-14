@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/x/group"
@@ -16,7 +16,7 @@ import (
 )
 
 func TestDecodeStore(t *testing.T) {
-	cdc := simulateapp.MakeTestEncodingConfig().Codec
+	cdc := simapp.MakeTestEncodingConfig().Codec
 	dec := simulation.NewDecodeStore(cdc)
 
 	g := group.GroupInfo{Id: 1}

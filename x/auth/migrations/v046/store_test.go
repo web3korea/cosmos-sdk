@@ -9,14 +9,14 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 )
 
 // TestMigrateMapAccAddressToAccNumberKey test cases for state migration of map to accAddr to accNum
 func TestMigrateMapAccAddressToAccNumberKey(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 
 	// new base account
 	senderPrivKey := secp256k1.GenPrivKey()

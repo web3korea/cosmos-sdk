@@ -13,7 +13,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
@@ -31,7 +31,7 @@ const minExecutionPeriod = 5 * time.Second
 type TestSuite struct {
 	suite.Suite
 
-	app             *simulateapp.SimApp
+	app             *simapp.SimApp
 	sdkCtx          sdk.Context
 	ctx             context.Context
 	addrs           []sdk.AccAddress
@@ -43,7 +43,7 @@ type TestSuite struct {
 }
 
 func (s *TestSuite) SetupTest() {
-	app := simulateapp.Setup(s.T(), false)
+	app := simapp.Setup(s.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	s.blockTime = tmtime.Now()
@@ -53,7 +53,7 @@ func (s *TestSuite) SetupTest() {
 	s.sdkCtx = ctx
 	s.ctx = sdk.WrapSDKContext(ctx)
 	s.keeper = s.app.GroupKeeper
-	s.addrs = simulateapp.AddTestAddrsIncremental(app, ctx, 6, sdk.NewInt(30000000))
+	s.addrs = simapp.AddTestAddrsIncremental(app, ctx, 6, sdk.NewInt(30000000))
 
 	// Initial group, group policy and balance setup
 	members := []group.MemberRequest{
@@ -100,7 +100,7 @@ func (s *TestSuite) TestCreateGroupWithLotsOfMembers() {
 }
 
 func (s *TestSuite) createGroupAndGetMembers(numMembers int) []*group.GroupMember {
-	addressPool := simulateapp.AddTestAddrsIncremental(s.app, s.sdkCtx, numMembers, sdk.NewInt(30000000))
+	addressPool := simapp.AddTestAddrsIncremental(s.app, s.sdkCtx, numMembers, sdk.NewInt(30000000))
 	members := make([]group.MemberRequest, numMembers)
 	for i := 0; i < len(members); i++ {
 		members[i] = group.MemberRequest{
@@ -2839,7 +2839,7 @@ func (s *TestSuite) TestProposalsByVPEnd() {
 }
 
 func (s *TestSuite) TestLeaveGroup() {
-	addrs := simulateapp.AddTestAddrsIncremental(s.app, s.sdkCtx, 7, sdk.NewInt(3000000))
+	addrs := simapp.AddTestAddrsIncremental(s.app, s.sdkCtx, 7, sdk.NewInt(3000000))
 	admin1 := addrs[0]
 	member1 := addrs[1]
 	member2 := addrs[2]

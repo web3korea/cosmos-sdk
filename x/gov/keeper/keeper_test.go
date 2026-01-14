@@ -8,7 +8,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	"github.com/cosmos/cosmos-sdk/x/gov/types"
@@ -20,7 +20,7 @@ import (
 type KeeperTestSuite struct {
 	suite.Suite
 
-	app               *simulateapp.SimApp
+	app               *simapp.SimApp
 	ctx               sdk.Context
 	queryClient       v1.QueryClient
 	legacyQueryClient v1beta1.QueryClient
@@ -30,7 +30,7 @@ type KeeperTestSuite struct {
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-	app := simulateapp.Setup(suite.T(), false)
+	app := simapp.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	// Populate the gov account with some coins, as the TestProposal we have
@@ -56,11 +56,11 @@ func (suite *KeeperTestSuite) SetupTest() {
 
 	govAcct := suite.app.GovKeeper.GetGovernanceAccount(suite.ctx).GetAddress()
 	suite.legacyMsgSrvr = keeper.NewLegacyMsgServerImpl(govAcct.String(), suite.msgSrvr)
-	suite.addrs = simulateapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(30000000))
+	suite.addrs = simapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(30000000))
 }
 
 func TestIncrementProposalNumber(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	tp := TestProposal
@@ -81,7 +81,7 @@ func TestIncrementProposalNumber(t *testing.T) {
 }
 
 func TestProposalQueues(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	// create test proposals

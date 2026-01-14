@@ -8,7 +8,7 @@ import (
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
@@ -23,7 +23,7 @@ type GenesisTestSuite struct {
 
 func (suite *GenesisTestSuite) SetupTest() {
 	checkTx := false
-	app := simulateapp.Setup(suite.T(), checkTx)
+	app := simapp.Setup(suite.T(), checkTx)
 	suite.ctx = app.BaseApp.NewContext(checkTx, tmproto.Header{Height: 1})
 	suite.keeper = app.FeeGrantKeeper
 }

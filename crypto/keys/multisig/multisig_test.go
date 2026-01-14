@@ -15,7 +15,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/crypto/types/multisig"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	"github.com/cosmos/cosmos-sdk/x/auth/migrations/legacytx"
@@ -356,7 +356,7 @@ func TestDisplay(t *testing.T) {
 	require.PanicsWithValue("reflect.Value.Interface: cannot return value obtained from unexported field or method",
 		func() { require.Empty(msig.String()) },
 	)
-	ccfg := simulateapp.MakeTestEncodingConfig()
+	ccfg := simapp.MakeTestEncodingConfig()
 	bz, err := ccfg.Codec.MarshalInterfaceJSON(msig)
 	require.NoError(err)
 	expectedPrefix := `{"@type":"/cosmos.crypto.multisig.LegacyAminoPubKey","threshold":2,"public_keys":[{"@type":"/cosmos.crypto.secp256k1.PubKey"`

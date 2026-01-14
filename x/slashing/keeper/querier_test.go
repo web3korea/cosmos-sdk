@@ -9,14 +9,14 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/x/slashing/keeper"
 	"github.com/cosmos/cosmos-sdk/x/slashing/testslashing"
 	"github.com/cosmos/cosmos-sdk/x/slashing/types"
 )
 
 func TestNewQuerier(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	app.SlashingKeeper.SetParams(ctx, testslashing.TestParams())
 	legacyQuerierCdc := codec.NewAminoCodec(app.LegacyAmino())
@@ -34,7 +34,7 @@ func TestNewQuerier(t *testing.T) {
 func TestQueryParams(t *testing.T) {
 	cdc := codec.NewLegacyAmino()
 	legacyQuerierCdc := codec.NewAminoCodec(cdc)
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	app.SlashingKeeper.SetParams(ctx, testslashing.TestParams())
 

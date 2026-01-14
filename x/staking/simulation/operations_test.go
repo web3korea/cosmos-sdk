@@ -13,8 +13,8 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simulateapp/params"
+	"github.com/cosmos/cosmos-sdk/simapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -306,7 +306,7 @@ func TestSimulateMsgBeginRedelegate(t *testing.T) {
 }
 
 // returns context and an app with updated mint keeper
-func createTestApp(t *testing.T, isCheckTx bool, r *rand.Rand, n int) (*simulateapp.SimApp, sdk.Context, []simtypes.Account) {
+func createTestApp(t *testing.T, isCheckTx bool, r *rand.Rand, n int) (*simapp.SimApp, sdk.Context, []simtypes.Account) {
 	sdk.DefaultPowerReduction = sdk.NewIntFromBigInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(18), nil))
 
 	accounts := simtypes.RandomAccounts(r, n)
@@ -326,7 +326,7 @@ func createTestApp(t *testing.T, isCheckTx bool, r *rand.Rand, n int) (*simulate
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
 	}
 
-	app := simulateapp.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance)
+	app := simapp.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance)
 
 	ctx := app.BaseApp.NewContext(isCheckTx, tmproto.Header{})
 	app.MintKeeper.SetParams(ctx, minttypes.DefaultParams())
@@ -348,17 +348,17 @@ func createTestApp(t *testing.T, isCheckTx bool, r *rand.Rand, n int) (*simulate
 	return app, ctx, accounts
 }
 
-func getTestingValidator0(t *testing.T, app *simulateapp.SimApp, ctx sdk.Context, accounts []simtypes.Account) types.Validator {
+func getTestingValidator0(t *testing.T, app *simapp.SimApp, ctx sdk.Context, accounts []simtypes.Account) types.Validator {
 	commission0 := types.NewCommission(sdk.ZeroDec(), sdk.OneDec(), sdk.OneDec())
 	return getTestingValidator(t, app, ctx, accounts, commission0, 0)
 }
 
-func getTestingValidator1(t *testing.T, app *simulateapp.SimApp, ctx sdk.Context, accounts []simtypes.Account) types.Validator {
+func getTestingValidator1(t *testing.T, app *simapp.SimApp, ctx sdk.Context, accounts []simtypes.Account) types.Validator {
 	commission1 := types.NewCommission(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec())
 	return getTestingValidator(t, app, ctx, accounts, commission1, 1)
 }
 
-func getTestingValidator(t *testing.T, app *simulateapp.SimApp, ctx sdk.Context, accounts []simtypes.Account, commission types.Commission, n int) types.Validator {
+func getTestingValidator(t *testing.T, app *simapp.SimApp, ctx sdk.Context, accounts []simtypes.Account, commission types.Commission, n int) types.Validator {
 	account := accounts[n]
 	valPubKey := account.PubKey
 	valAddr := sdk.ValAddress(account.PubKey.Address().Bytes())
@@ -374,7 +374,7 @@ func getTestingValidator(t *testing.T, app *simulateapp.SimApp, ctx sdk.Context,
 	return validator
 }
 
-func setupValidatorRewards(app *simulateapp.SimApp, ctx sdk.Context, valAddress sdk.ValAddress) {
+func setupValidatorRewards(app *simapp.SimApp, ctx sdk.Context, valAddress sdk.ValAddress) {
 	decCoins := sdk.DecCoins{sdk.NewDecCoinFromDec(sdk.DefaultBondDenom, sdk.OneDec())}
 	historicalRewards := distrtypes.NewValidatorHistoricalRewards(decCoins, 2)
 	app.DistrKeeper.SetValidatorHistoricalRewards(ctx, valAddress, 2, historicalRewards)

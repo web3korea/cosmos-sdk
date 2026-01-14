@@ -9,7 +9,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -18,7 +18,7 @@ import (
 type KeeperTestSuite struct {
 	suite.Suite
 
-	app         *simulateapp.SimApp
+	app         *simapp.SimApp
 	ctx         sdk.Context
 	addrs       []sdk.AccAddress
 	vals        []types.Validator
@@ -27,7 +27,7 @@ type KeeperTestSuite struct {
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-	app := simulateapp.Setup(suite.T(), false)
+	app := simapp.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	querier := keeper.Querier{Keeper: app.StakingKeeper}
@@ -55,7 +55,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 }
 
 func TestParams(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	expParams := types.DefaultParams()

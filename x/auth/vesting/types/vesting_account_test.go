@@ -10,7 +10,7 @@ import (
 	tmtime "github.com/tendermint/tendermint/types/time"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -25,13 +25,13 @@ var (
 type VestingAccountTestSuite struct {
 	suite.Suite
 
-	app *simulateapp.SimApp
+	app *simapp.SimApp
 	ctx sdk.Context
 }
 
 func (s *VestingAccountTestSuite) SetupTest() {
 	checkTx := false
-	s.app = simulateapp.Setup(s.T(), checkTx)
+	s.app = simapp.Setup(s.T(), checkTx)
 
 	s.ctx = s.app.BaseApp.NewContext(checkTx, tmproto.Header{Height: 1})
 }

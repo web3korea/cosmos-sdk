@@ -10,7 +10,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	v046 "github.com/cosmos/cosmos-sdk/x/gov/migrations/v046"
@@ -22,7 +22,7 @@ import (
 var voter = sdk.MustAccAddressFromBech32("cosmos1fl48vsnmsdzcv85q5d2q4z5ajdha8yu34mf0eh")
 
 func TestMigrateJSON(t *testing.T) {
-	encodingConfig := simulateapp.MakeTestEncodingConfig()
+	encodingConfig := simapp.MakeTestEncodingConfig()
 	clientCtx := client.Context{}.
 		WithInterfaceRegistry(encodingConfig.InterfaceRegistry).
 		WithTxConfig(encodingConfig.TxConfig).

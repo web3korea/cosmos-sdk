@@ -10,7 +10,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 )
 
@@ -60,7 +60,7 @@ func TestMarshalAny(t *testing.T) {
 
 func TestMarshalProtoPubKey(t *testing.T) {
 	require := require.New(t)
-	ccfg := simulateapp.MakeTestEncodingConfig()
+	ccfg := simapp.MakeTestEncodingConfig()
 	privKey := ed25519.GenPrivKey()
 	pk := privKey.PubKey()
 
@@ -100,7 +100,7 @@ func TestMarshalProtoPubKey(t *testing.T) {
 // helper functions
 func TestMarshalProtoInterfacePubKey(t *testing.T) {
 	require := require.New(t)
-	ccfg := simulateapp.MakeTestEncodingConfig()
+	ccfg := simapp.MakeTestEncodingConfig()
 	privKey := ed25519.GenPrivKey()
 	pk := privKey.PubKey()
 

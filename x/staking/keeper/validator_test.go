@@ -11,7 +11,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/cosmos/cosmos-sdk/x/staking"
@@ -26,7 +26,7 @@ func newMonikerValidator(t testing.TB, operator sdk.ValAddress, pubKey cryptotyp
 	return v
 }
 
-func bootstrapValidatorTest(t testing.TB, power int64, numAddrs int) (*simulateapp.SimApp, sdk.Context, []sdk.AccAddress, []sdk.ValAddress) {
+func bootstrapValidatorTest(t testing.TB, power int64, numAddrs int) (*simapp.SimApp, sdk.Context, []sdk.AccAddress, []sdk.ValAddress) {
 	_, app, ctx := createTestInput(&testing.T{})
 
 	addrDels, addrVals := generateAddresses(app, ctx, numAddrs)
@@ -54,9 +54,9 @@ func bootstrapValidatorTest(t testing.TB, power int64, numAddrs int) (*simulatea
 	return app, ctx, addrDels, addrVals
 }
 
-func initValidators(t testing.TB, power int64, numAddrs int, powers []int64) (*simulateapp.SimApp, sdk.Context, []sdk.AccAddress, []sdk.ValAddress, []types.Validator) {
+func initValidators(t testing.TB, power int64, numAddrs int, powers []int64) (*simapp.SimApp, sdk.Context, []sdk.AccAddress, []sdk.ValAddress, []types.Validator) {
 	app, ctx, addrs, valAddrs := bootstrapValidatorTest(t, power, numAddrs)
-	pks := simulateapp.CreateTestPubKeys(numAddrs)
+	pks := simapp.CreateTestPubKeys(numAddrs)
 
 	vs := make([]types.Validator, len(powers))
 	for i, power := range powers {

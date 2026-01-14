@@ -8,7 +8,7 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
@@ -17,11 +17,11 @@ import (
 )
 
 func TestBeginBlocker(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
-	pks := simulateapp.CreateTestPubKeys(1)
-	simulateapp.AddTestAddrsFromPubKeys(app, ctx, pks, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	pks := simapp.CreateTestPubKeys(1)
+	simapp.AddTestAddrsFromPubKeys(app, ctx, pks, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
 	addr, pk := sdk.ValAddress(pks[0].Address()), pks[0]
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
 

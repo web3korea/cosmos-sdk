@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -21,14 +21,14 @@ type KeeperTestSuite struct {
 	suite.Suite
 
 	homeDir string
-	app     *simulateapp.SimApp
+	app     *simapp.SimApp
 	ctx     sdk.Context
 	msgSrvr types.MsgServer
 	addrs   []sdk.AccAddress
 }
 
 func (s *KeeperTestSuite) SetupTest() {
-	app := simulateapp.Setup(s.T(), false)
+	app := simapp.Setup(s.T(), false)
 	homeDir := filepath.Join(s.T().TempDir(), "x_upgrade_keeper_test")
 	app.UpgradeKeeper = keeper.NewKeeper( // recreate keeper in order to use a custom home path
 		make(map[int64]bool), app.GetKey(types.StoreKey), app.AppCodec(), homeDir, app.BaseApp,
@@ -42,7 +42,7 @@ func (s *KeeperTestSuite) SetupTest() {
 		Height: 10,
 	})
 	s.msgSrvr = keeper.NewMsgServerImpl(s.app.UpgradeKeeper)
-	s.addrs = simulateapp.AddTestAddrsIncremental(app, s.ctx, 1, sdk.NewInt(30000000))
+	s.addrs = simapp.AddTestAddrsIncremental(app, s.ctx, 1, sdk.NewInt(30000000))
 }
 
 func (s *KeeperTestSuite) TestReadUpgradeInfoFromDisk() {

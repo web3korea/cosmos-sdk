@@ -13,7 +13,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -35,14 +35,14 @@ var s TestSuite
 
 func setupTest(t *testing.T, height int64, skip map[int64]bool) TestSuite {
 	db := dbm.NewMemDB()
-	app := simulateapp.NewSimappWithCustomOptions(t, false, simulateapp.SetupOptions{
+	app := simapp.NewSimappWithCustomOptions(t, false, simapp.SetupOptions{
 		Logger:             log.NewNopLogger(),
 		SkipUpgradeHeights: skip,
 		DB:                 db,
 		InvCheckPeriod:     0,
-		HomePath:           simulateapp.DefaultNodeHome,
-		EncConfig:          simulateapp.MakeTestEncodingConfig(),
-		AppOpts:            simulateapp.EmptyAppOptions{},
+		HomePath:           simapp.DefaultNodeHome,
+		EncConfig:          simapp.MakeTestEncodingConfig(),
+		AppOpts:            simapp.EmptyAppOptions{},
 	})
 
 	s.keeper = app.UpgradeKeeper

@@ -13,7 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	txtypes "github.com/cosmos/cosmos-sdk/types/tx"
 	signingtypes "github.com/cosmos/cosmos-sdk/types/tx/signing"
@@ -22,7 +22,7 @@ import (
 )
 
 func NewTestTxConfig() client.TxConfig {
-	cfg := simulateapp.MakeTestEncodingConfig()
+	cfg := simapp.MakeTestEncodingConfig()
 	return cfg.TxConfig
 }
 
@@ -97,7 +97,7 @@ func TestCalculateGas(t *testing.T) {
 
 func TestBuildSimTx(t *testing.T) {
 	txCfg := NewTestTxConfig()
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 
 	kb, err := keyring.New(t.Name(), "test", t.TempDir(), nil, encCfg.Codec)
 	require.NoError(t, err)
@@ -123,7 +123,7 @@ func TestBuildSimTx(t *testing.T) {
 }
 
 func TestBuildUnsignedTx(t *testing.T) {
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 	kb, err := keyring.New(t.Name(), "test", t.TempDir(), nil, encCfg.Codec)
 	require.NoError(t, err)
 
@@ -154,7 +154,7 @@ func TestBuildUnsignedTx(t *testing.T) {
 func TestSign(t *testing.T) {
 	requireT := require.New(t)
 	path := hd.CreateHDPath(118, 0, 0).String()
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 	kb, err := keyring.New(t.Name(), "test", t.TempDir(), nil, encCfg.Codec)
 	requireT.NoError(err)
 

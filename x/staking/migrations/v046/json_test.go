@@ -7,13 +7,13 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	v046 "github.com/cosmos/cosmos-sdk/x/staking/migrations/v046"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 func TestMigrateJSON(t *testing.T) {
-	encodingConfig := simulateapp.MakeTestEncodingConfig()
+	encodingConfig := simapp.MakeTestEncodingConfig()
 	clientCtx := client.Context{}.
 		WithInterfaceRegistry(encodingConfig.InterfaceRegistry).
 		WithTxConfig(encodingConfig.TxConfig).

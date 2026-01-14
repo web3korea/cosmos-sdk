@@ -10,8 +10,8 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simulateapp/params"
+	"github.com/cosmos/cosmos-sdk/simapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
@@ -261,8 +261,8 @@ func TestSimulateMsgVoteWeighted(t *testing.T) {
 }
 
 // returns context and an app with updated mint keeper
-func createTestApp(t *testing.T, isCheckTx bool) (*simulateapp.SimApp, sdk.Context) {
-	app := simulateapp.Setup(t, isCheckTx)
+func createTestApp(t *testing.T, isCheckTx bool) (*simapp.SimApp, sdk.Context) {
+	app := simapp.Setup(t, isCheckTx)
 
 	ctx := app.BaseApp.NewContext(isCheckTx, tmproto.Header{})
 	app.MintKeeper.SetParams(ctx, minttypes.DefaultParams())
@@ -271,7 +271,7 @@ func createTestApp(t *testing.T, isCheckTx bool) (*simulateapp.SimApp, sdk.Conte
 	return app, ctx
 }
 
-func getTestingAccounts(t *testing.T, r *rand.Rand, app *simulateapp.SimApp, ctx sdk.Context, n int) []simtypes.Account {
+func getTestingAccounts(t *testing.T, r *rand.Rand, app *simapp.SimApp, ctx sdk.Context, n int) []simtypes.Account {
 	accounts := simtypes.RandomAccounts(r, n)
 
 	initAmt := app.StakingKeeper.TokensFromConsensusPower(ctx, 200)

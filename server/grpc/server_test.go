@@ -24,7 +24,7 @@ import (
 	reflectionv1 "github.com/cosmos/cosmos-sdk/client/grpc/reflection"
 	clienttx "github.com/cosmos/cosmos-sdk/client/tx"
 	reflectionv2 "github.com/cosmos/cosmos-sdk/server/grpc/reflection/v2alpha1"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/network"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -40,7 +40,7 @@ import (
 type IntegrationTestSuite struct {
 	suite.Suite
 
-	app     *simulateapp.SimApp
+	app     *simapp.SimApp
 	cfg     network.Config
 	network *network.Network
 	conn    *grpc.ClientConn
@@ -48,7 +48,7 @@ type IntegrationTestSuite struct {
 
 func (s *IntegrationTestSuite) SetupSuite() {
 	s.T().Log("setting up integration test suite")
-	s.app = simulateapp.Setup(s.T(), false)
+	s.app = simapp.Setup(s.T(), false)
 	s.cfg = network.DefaultConfig()
 	s.cfg.NumValidators = 1
 

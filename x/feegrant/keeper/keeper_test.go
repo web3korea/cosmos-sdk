@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	"github.com/cosmos/cosmos-sdk/x/feegrant/keeper"
@@ -16,7 +16,7 @@ import (
 type KeeperTestSuite struct {
 	suite.Suite
 
-	app     *simulateapp.SimApp
+	app     *simapp.SimApp
 	sdkCtx  sdk.Context
 	addrs   []sdk.AccAddress
 	msgSrvr feegrant.MsgServer
@@ -30,12 +30,12 @@ func TestKeeperTestSuite(t *testing.T) {
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-	app := simulateapp.Setup(suite.T(), false)
+	app := simapp.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	suite.app = app
 	suite.sdkCtx = ctx
-	suite.addrs = simulateapp.AddTestAddrsIncremental(app, ctx, 4, sdk.NewInt(30000000))
+	suite.addrs = simapp.AddTestAddrsIncremental(app, ctx, 4, sdk.NewInt(30000000))
 	suite.ctx = sdk.WrapSDKContext(ctx)
 	suite.keeper = suite.app.FeeGrantKeeper
 	suite.msgSrvr = keeper.NewMsgServerImpl(suite.keeper)

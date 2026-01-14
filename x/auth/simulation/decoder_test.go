@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/x/auth/simulation"
@@ -21,8 +21,8 @@ var (
 )
 
 func TestDecodeStore(t *testing.T) {
-	app := simulateapp.Setup(t, false)
-	cdc := simulateapp.MakeTestEncodingConfig().Codec
+	app := simapp.Setup(t, false)
+	cdc := simapp.MakeTestEncodingConfig().Codec
 	acc := types.NewBaseAccountWithAddress(delAddr1)
 	dec := simulation.NewDecodeStore(app.AccountKeeper)
 

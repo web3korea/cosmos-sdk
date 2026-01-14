@@ -4,7 +4,7 @@ import (
 	gocontext "context"
 	"fmt"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	v046 "github.com/cosmos/cosmos-sdk/x/gov/migrations/v046"
@@ -586,7 +586,7 @@ func (suite *KeeperTestSuite) TestLegacyGRPCQueryVote() {
 func (suite *KeeperTestSuite) TestGRPCQueryVotes() {
 	app, ctx, queryClient := suite.app, suite.ctx, suite.queryClient
 
-	addrs := simulateapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(30000000))
+	addrs := simapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(30000000))
 
 	var (
 		req      *v1.QueryVotesRequest
@@ -687,7 +687,7 @@ func (suite *KeeperTestSuite) TestGRPCQueryVotes() {
 func (suite *KeeperTestSuite) TestLegacyGRPCQueryVotes() {
 	app, ctx, queryClient := suite.app, suite.ctx, suite.legacyQueryClient
 
-	addrs := simulateapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(30000000))
+	addrs := simapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(30000000))
 
 	var (
 		req      *v1beta1.QueryVotesRequest

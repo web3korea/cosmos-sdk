@@ -9,7 +9,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
@@ -22,7 +22,7 @@ import (
 type KeeperTestSuite struct {
 	suite.Suite
 
-	app         *simulateapp.SimApp
+	app         *simapp.SimApp
 	ctx         sdk.Context
 	queryClient types.QueryClient
 	addrs       []sdk.AccAddress
@@ -30,7 +30,7 @@ type KeeperTestSuite struct {
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-	app := simulateapp.Setup(suite.T(), false)
+	app := simapp.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry())
@@ -41,8 +41,8 @@ func (suite *KeeperTestSuite) SetupTest() {
 	suite.ctx = ctx
 	suite.queryClient = queryClient
 
-	suite.addrs = simulateapp.AddTestAddrs(app, ctx, 2, sdk.NewInt(1000000000))
-	suite.valAddrs = simulateapp.ConvertAddrsToValAddrs(suite.addrs)
+	suite.addrs = simapp.AddTestAddrs(app, ctx, 2, sdk.NewInt(1000000000))
+	suite.valAddrs = simapp.ConvertAddrsToValAddrs(suite.addrs)
 }
 
 func (suite *KeeperTestSuite) TestGRPCParams() {

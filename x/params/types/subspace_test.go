@@ -13,7 +13,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/params/types"
@@ -36,7 +36,7 @@ func (suite *SubspaceTestSuite) SetupTest() {
 	ms.MountStoreWithDB(tkey, storetypes.StoreTypeTransient, db)
 	suite.NoError(ms.LoadLatestVersion())
 
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 	ss := types.NewSubspace(encCfg.Codec, encCfg.Amino, key, tkey, "testsubspace")
 
 	suite.cdc = encCfg.Codec

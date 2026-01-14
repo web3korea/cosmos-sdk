@@ -1,10 +1,10 @@
 package types_test
 
 import (
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 )
 
 var (
-	ecdc                  = simulateapp.MakeTestEncodingConfig()
+	ecdc                  = simapp.MakeTestEncodingConfig()
 	appCodec, legacyAmino = ecdc.Codec, ecdc.Amino
 )

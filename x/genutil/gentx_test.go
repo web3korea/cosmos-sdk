@@ -11,9 +11,9 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
-	"github.com/cosmos/cosmos-sdk/simulateapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simulateapp/params"
+	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -38,7 +38,7 @@ type GenTxTestSuite struct {
 	suite.Suite
 
 	ctx            sdk.Context
-	app            *simulateapp.SimApp
+	app            *simapp.SimApp
 	encodingConfig simappparams.EncodingConfig
 
 	msg1, msg2 *stakingtypes.MsgCreateValidator
@@ -46,10 +46,10 @@ type GenTxTestSuite struct {
 
 func (suite *GenTxTestSuite) SetupTest() {
 	checkTx := false
-	app := simulateapp.Setup(suite.T(), checkTx)
+	app := simapp.Setup(suite.T(), checkTx)
 	suite.ctx = app.BaseApp.NewContext(checkTx, tmproto.Header{})
 	suite.app = app
-	suite.encodingConfig = simulateapp.MakeTestEncodingConfig()
+	suite.encodingConfig = simapp.MakeTestEncodingConfig()
 
 	var err error
 	amount := sdk.NewInt64Coin(sdk.DefaultBondDenom, 50)

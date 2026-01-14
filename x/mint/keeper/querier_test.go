@@ -9,7 +9,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	keep "github.com/cosmos/cosmos-sdk/x/mint/keeper"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -18,13 +18,13 @@ import (
 type MintKeeperTestSuite struct {
 	suite.Suite
 
-	app              *simulateapp.SimApp
+	app              *simapp.SimApp
 	ctx              sdk.Context
 	legacyQuerierCdc *codec.AminoCodec
 }
 
 func (suite *MintKeeperTestSuite) SetupTest() {
-	app := simulateapp.Setup(suite.T(), true)
+	app := simapp.Setup(suite.T(), true)
 	ctx := app.BaseApp.NewContext(true, tmproto.Header{})
 
 	app.MintKeeper.SetParams(ctx, types.DefaultParams())

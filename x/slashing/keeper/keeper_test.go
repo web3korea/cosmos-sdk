@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/slashing/testslashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
@@ -16,16 +16,16 @@ import (
 )
 
 func TestUnJailNotBonded(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	p := app.StakingKeeper.GetParams(ctx)
 	p.MaxValidators = 5
 	app.StakingKeeper.SetParams(ctx, p)
 
-	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 6, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
-	valAddrs := simulateapp.ConvertAddrsToValAddrs(addrDels)
-	pks := simulateapp.CreateTestPubKeys(6)
+	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 6, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	valAddrs := simapp.ConvertAddrsToValAddrs(addrDels)
+	pks := simapp.CreateTestPubKeys(6)
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
 
 	// create max (5) validators all with the same power
@@ -82,12 +82,12 @@ func TestUnJailNotBonded(t *testing.T) {
 // Ensure that SigningInfo.StartHeight is set correctly
 // and that they are not immediately jailed
 func TestHandleNewValidator(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
-	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
-	valAddrs := simulateapp.ConvertAddrsToValAddrs(addrDels)
-	pks := simulateapp.CreateTestPubKeys(1)
+	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	valAddrs := simapp.ConvertAddrsToValAddrs(addrDels)
+	pks := simapp.CreateTestPubKeys(1)
 	addr, val := valAddrs[0], pks[0]
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
 	ctx = ctx.WithBlockHeight(app.SlashingKeeper.SignedBlocksWindow(ctx) + 1)
@@ -128,12 +128,12 @@ func TestHandleNewValidator(t *testing.T) {
 // Ensure that they're only slashed once
 func TestHandleAlreadyJailed(t *testing.T) {
 	// initial setup
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
-	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
-	valAddrs := simulateapp.ConvertAddrsToValAddrs(addrDels)
-	pks := simulateapp.CreateTestPubKeys(1)
+	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	valAddrs := simapp.ConvertAddrsToValAddrs(addrDels)
+	pks := simapp.CreateTestPubKeys(1)
 	addr, val := valAddrs[0], pks[0]
 	power := int64(100)
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
@@ -181,7 +181,7 @@ func TestHandleAlreadyJailed(t *testing.T) {
 func TestValidatorDippingInAndOut(t *testing.T) {
 	// initial setup
 	// TestParams set the SignedBlocksWindow to 1000 and MaxMissedBlocksPerWindow to 500
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	app.SlashingKeeper.SetParams(ctx, testslashing.TestParams())
 
@@ -190,8 +190,8 @@ func TestValidatorDippingInAndOut(t *testing.T) {
 	app.StakingKeeper.SetParams(ctx, params)
 	power := int64(100)
 
-	pks := simulateapp.CreateTestPubKeys(3)
-	simulateapp.AddTestAddrsFromPubKeys(app, ctx, pks, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	pks := simapp.CreateTestPubKeys(3)
+	simapp.AddTestAddrsFromPubKeys(app, ctx, pks, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
 
 	addr, val := pks[0].Address(), pks[0]
 	consAddr := sdk.ConsAddress(addr)

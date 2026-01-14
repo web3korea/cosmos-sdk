@@ -2,7 +2,7 @@ package keeper_test
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,7 +10,7 @@ import (
 )
 
 func testComponents() (*codec.LegacyAmino, sdk.Context, storetypes.StoreKey, storetypes.StoreKey, paramskeeper.Keeper) {
-	marshaler := simulateapp.MakeTestEncodingConfig().Codec
+	marshaler := simapp.MakeTestEncodingConfig().Codec
 	legacyAmino := createTestCodec()
 	mkey := sdk.NewKVStoreKey("test")
 	tkey := sdk.NewTransientStoreKey("transient_test")

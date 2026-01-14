@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -14,7 +14,7 @@ import (
 )
 
 func TestStoreMigration(t *testing.T) {
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 	stakingKey := sdk.NewKVStoreKey("staking")
 	tStakingKey := sdk.NewTransientStoreKey("transient_test")
 	ctx := testutil.DefaultContext(stakingKey, tStakingKey)

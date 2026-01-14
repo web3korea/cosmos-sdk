@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability/keeper"
@@ -19,13 +19,13 @@ type KeeperTestSuite struct {
 	suite.Suite
 
 	ctx    sdk.Context
-	app    *simulateapp.SimApp
+	app    *simapp.SimApp
 	keeper *keeper.Keeper
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
 	checkTx := false
-	app := simulateapp.Setup(suite.T(), checkTx)
+	app := simapp.Setup(suite.T(), checkTx)
 	cdc := app.AppCodec()
 
 	// create new keeper so we can define custom scoping before init and seal

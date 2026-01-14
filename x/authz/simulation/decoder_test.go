@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/x/authz"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestDecodeStore(t *testing.T) {
-	cdc := simulateapp.MakeTestEncodingConfig().Codec
+	cdc := simapp.MakeTestEncodingConfig().Codec
 	dec := simulation.NewDecodeStore(cdc)
 
 	now := time.Now().UTC()

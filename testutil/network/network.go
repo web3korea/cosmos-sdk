@@ -37,8 +37,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/api"
 	srvconfig "github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
-	"github.com/cosmos/cosmos-sdk/simulateapp/params"
+	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -57,10 +57,10 @@ type AppConstructor = func(val Validator) servertypes.Application
 // NewAppConstructor returns a new simapp AppConstructor
 func NewAppConstructor(encodingCfg params.EncodingConfig) AppConstructor {
 	return func(val Validator) servertypes.Application {
-		return simulateapp.NewSimApp(
+		return simapp.NewSimApp(
 			val.Ctx.Logger, dbm.NewMemDB(), nil, true, make(map[int64]bool), val.Ctx.Config.RootDir, 0,
 			encodingCfg,
-			simulateapp.EmptyAppOptions{},
+			simapp.EmptyAppOptions{},
 			baseapp.SetPruning(pruningtypes.NewPruningOptionsFromString(val.AppConfig.Pruning)),
 			baseapp.SetMinGasPrices(val.AppConfig.MinGasPrices),
 		)
@@ -101,7 +101,7 @@ type Config struct {
 // DefaultConfig returns a sane default configuration suitable for nearly all
 // testing requirements.
 func DefaultConfig() Config {
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 
 	return Config{
 		Codec:             encCfg.Codec,
@@ -110,7 +110,7 @@ func DefaultConfig() Config {
 		InterfaceRegistry: encCfg.InterfaceRegistry,
 		AccountRetriever:  authtypes.AccountRetriever{},
 		AppConstructor:    NewAppConstructor(encCfg),
-		GenesisState:      simulateapp.ModuleBasics.DefaultGenesis(encCfg.Codec),
+		GenesisState:      simapp.ModuleBasics.DefaultGenesis(encCfg.Codec),
 		TimeoutCommit:     2 * time.Second,
 		ChainID:           "chain-" + tmrand.Str(6),
 		NumValidators:     4,

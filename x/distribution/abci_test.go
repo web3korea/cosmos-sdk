@@ -5,7 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -33,9 +33,9 @@ type validator struct {
 
 // Context in https://github.com/cosmos/cosmos-sdk/issues/9161
 func TestVerifyProposerRewardAssignement(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
-	addrs := simulateapp.AddTestAddrsIncremental(app, ctx, totalValidators, valTokens)
+	addrs := simapp.AddTestAddrsIncremental(app, ctx, totalValidators, valTokens)
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
 	tstaking.Commission = validatorCommissionRates
 

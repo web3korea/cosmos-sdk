@@ -9,7 +9,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
@@ -19,7 +19,7 @@ import (
 func TestNewQuerier(t *testing.T) {
 	cdc, app, ctx := createTestInput(t)
 
-	addrs := simulateapp.AddTestAddrs(app, ctx, 500, sdk.NewInt(10000))
+	addrs := simapp.AddTestAddrs(app, ctx, 500, sdk.NewInt(10000))
 	_, addrAcc2 := addrs[0], addrs[1]
 	addrVal1, _ := sdk.ValAddress(addrs[0]), sdk.ValAddress(addrs[1])
 
@@ -140,7 +140,7 @@ func TestQueryValidators(t *testing.T) {
 	legacyQuerierCdc := codec.NewAminoCodec(app.LegacyAmino())
 	querier := keeper.NewQuerier(app.StakingKeeper, legacyQuerierCdc.LegacyAmino)
 
-	addrs := simulateapp.AddTestAddrs(app, ctx, 500, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
+	addrs := simapp.AddTestAddrs(app, ctx, 500, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
 
 	// Create Validators
 	amts := []sdk.Int{sdk.NewInt(8), sdk.NewInt(7)}
@@ -207,11 +207,11 @@ func TestQueryDelegation(t *testing.T) {
 	legacyQuerierCdc := codec.NewAminoCodec(app.LegacyAmino())
 	querier := keeper.NewQuerier(app.StakingKeeper, legacyQuerierCdc.LegacyAmino)
 
-	addrs := simulateapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
+	addrs := simapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
 	addrAcc1, addrAcc2 := addrs[0], addrs[1]
 	addrVal1, addrVal2 := sdk.ValAddress(addrAcc1), sdk.ValAddress(addrAcc2)
 
-	pubKeys := simulateapp.CreateTestPubKeys(2)
+	pubKeys := simapp.CreateTestPubKeys(2)
 	pk1, pk2 := pubKeys[0], pubKeys[1]
 
 	// Create Validators and Delegation
@@ -457,8 +457,8 @@ func TestQueryValidatorDelegations_Pagination(t *testing.T) {
 	legacyQuerierCdc := codec.NewAminoCodec(app.LegacyAmino())
 	querier := keeper.NewQuerier(app.StakingKeeper, legacyQuerierCdc.LegacyAmino)
 
-	addrs := simulateapp.AddTestAddrs(app, ctx, 100, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
-	pubKeys := simulateapp.CreateTestPubKeys(1)
+	addrs := simapp.AddTestAddrs(app, ctx, 100, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
+	pubKeys := simapp.CreateTestPubKeys(1)
 
 	valAddress := sdk.ValAddress(addrs[0])
 
@@ -542,7 +542,7 @@ func TestQueryRedelegations(t *testing.T) {
 	legacyQuerierCdc := codec.NewAminoCodec(app.LegacyAmino())
 	querier := keeper.NewQuerier(app.StakingKeeper, legacyQuerierCdc.LegacyAmino)
 
-	addrs := simulateapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
+	addrs := simapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
 	addrAcc1, addrAcc2 := addrs[0], addrs[1]
 	addrVal1, addrVal2 := sdk.ValAddress(addrAcc1), sdk.ValAddress(addrAcc2)
 
@@ -614,7 +614,7 @@ func TestQueryUnbondingDelegation(t *testing.T) {
 	legacyQuerierCdc := codec.NewAminoCodec(app.LegacyAmino())
 	querier := keeper.NewQuerier(app.StakingKeeper, legacyQuerierCdc.LegacyAmino)
 
-	addrs := simulateapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
+	addrs := simapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
 	addrAcc1, addrAcc2 := addrs[0], addrs[1]
 	addrVal1 := sdk.ValAddress(addrAcc1)
 
@@ -710,7 +710,7 @@ func TestQueryHistoricalInfo(t *testing.T) {
 	legacyQuerierCdc := codec.NewAminoCodec(cdc)
 	querier := keeper.NewQuerier(app.StakingKeeper, legacyQuerierCdc.LegacyAmino)
 
-	addrs := simulateapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
+	addrs := simapp.AddTestAddrs(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 10000))
 	addrAcc1, addrAcc2 := addrs[0], addrs[1]
 	addrVal1, addrVal2 := sdk.ValAddress(addrAcc1), sdk.ValAddress(addrAcc2)
 

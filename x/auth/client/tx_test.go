@@ -11,7 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -55,7 +55,7 @@ func TestDefaultTxEncoder(t *testing.T) {
 
 func TestReadTxFromFile(t *testing.T) {
 	t.Parallel()
-	encodingConfig := simulateapp.MakeTestEncodingConfig()
+	encodingConfig := simapp.MakeTestEncodingConfig()
 
 	txCfg := encodingConfig.TxConfig
 	clientCtx := client.Context{}
@@ -89,7 +89,7 @@ func TestReadTxFromFile(t *testing.T) {
 
 func TestBatchScanner_Scan(t *testing.T) {
 	t.Parallel()
-	encodingConfig := simulateapp.MakeTestEncodingConfig()
+	encodingConfig := simapp.MakeTestEncodingConfig()
 
 	txGen := encodingConfig.TxConfig
 	clientCtx := client.Context{}

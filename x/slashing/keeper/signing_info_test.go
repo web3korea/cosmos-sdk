@@ -7,15 +7,15 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/slashing/types"
 )
 
 func TestGetSetValidatorSigningInfo(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
-	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
 
 	info, found := app.SlashingKeeper.GetValidatorSigningInfo(ctx, sdk.ConsAddress(addrDels[0]))
 	require.False(t, found)
@@ -37,9 +37,9 @@ func TestGetSetValidatorSigningInfo(t *testing.T) {
 }
 
 func TestGetSetValidatorMissedBlockBitArray(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
-	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
 
 	missed := app.SlashingKeeper.GetValidatorMissedBlockBitArray(ctx, sdk.ConsAddress(addrDels[0]), 0)
 	require.False(t, missed) // treat empty key as not missed
@@ -49,9 +49,9 @@ func TestGetSetValidatorMissedBlockBitArray(t *testing.T) {
 }
 
 func TestTombstoned(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
-	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
 
 	require.Panics(t, func() { app.SlashingKeeper.Tombstone(ctx, sdk.ConsAddress(addrDels[0])) })
 	require.False(t, app.SlashingKeeper.IsTombstoned(ctx, sdk.ConsAddress(addrDels[0])))
@@ -73,9 +73,9 @@ func TestTombstoned(t *testing.T) {
 }
 
 func TestJailUntil(t *testing.T) {
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
-	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 1, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
 
 	require.Panics(t, func() { app.SlashingKeeper.JailUntil(ctx, sdk.ConsAddress(addrDels[0]), time.Now()) })
 

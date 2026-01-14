@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
@@ -15,7 +15,7 @@ import (
 
 func TestCancelUnbondingDelegation(t *testing.T) {
 	// setup the app
-	app := simulateapp.Setup(t, false)
+	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	msgServer := keeper.NewMsgServerImpl(app.StakingKeeper)
 	bondDenom := app.StakingKeeper.BondDenom(ctx)
@@ -31,7 +31,7 @@ func TestCancelUnbondingDelegation(t *testing.T) {
 	require.Equal(t, sdk.NewInt64Coin(bondDenom, startTokens.Int64()), moduleBalance)
 
 	// accounts
-	delAddrs := simulateapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(10000))
+	delAddrs := simapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(10000))
 	validators := app.StakingKeeper.GetValidators(ctx, 10)
 	require.Equal(t, len(validators), 1)
 

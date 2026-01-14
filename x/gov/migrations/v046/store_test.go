@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	v042gov "github.com/cosmos/cosmos-sdk/x/gov/migrations/v042"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestMigrateStore(t *testing.T) {
-	cdc := simulateapp.MakeTestEncodingConfig().Codec
+	cdc := simapp.MakeTestEncodingConfig().Codec
 	govKey := sdk.NewKVStoreKey("gov")
 	ctx := testutil.DefaultContext(govKey, sdk.NewTransientStoreKey("transient_test"))
 	store := ctx.KVStore(govKey)

@@ -6,7 +6,7 @@ import (
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestMigration(t *testing.T) {
-	encCfg := simulateapp.MakeTestEncodingConfig()
+	encCfg := simapp.MakeTestEncodingConfig()
 	cdc := encCfg.Codec
 	authzKey := sdk.NewKVStoreKey("authz")
 	ctx := testutil.DefaultContext(authzKey, sdk.NewTransientStoreKey("transient_test"))

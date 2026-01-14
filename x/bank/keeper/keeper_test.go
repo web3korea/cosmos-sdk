@@ -11,7 +11,7 @@ import (
 	tmtime "github.com/tendermint/tendermint/types/time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
@@ -66,15 +66,15 @@ func getCoinsByName(ctx sdk.Context, bk keeper.Keeper, ak types.AccountKeeper, m
 type IntegrationTestSuite struct {
 	suite.Suite
 
-	app         *simulateapp.SimApp
+	app         *simapp.SimApp
 	ctx         sdk.Context
 	queryClient types.QueryClient
 }
 
 func (suite *IntegrationTestSuite) initKeepersWithmAccPerms(blockedAddrs map[string]bool) (authkeeper.AccountKeeper, keeper.BaseKeeper) {
 	app := suite.app
-	maccPerms := simulateapp.GetMaccPerms()
-	appCodec := simulateapp.MakeTestEncodingConfig().Codec
+	maccPerms := simapp.GetMaccPerms()
+	appCodec := simapp.MakeTestEncodingConfig().Codec
 
 	maccPerms[holder] = nil
 	maccPerms[authtypes.Burner] = []string{authtypes.Burner}
@@ -94,7 +94,7 @@ func (suite *IntegrationTestSuite) initKeepersWithmAccPerms(blockedAddrs map[str
 }
 
 func (suite *IntegrationTestSuite) SetupTest() {
-	app := simulateapp.Setup(suite.T(), false)
+	app := simapp.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{Time: time.Now()})
 
 	app.AccountKeeper.SetParams(ctx, authtypes.DefaultParams())
@@ -1045,7 +1045,7 @@ func (suite *IntegrationTestSuite) TestBalanceTrackingEvents() {
 	// replace account keeper and bank keeper otherwise the account keeper won't be aware of the
 	// existence of the new module account because GetModuleAccount checks for the existence via
 	// permissions map and not via state... weird
-	maccPerms := simulateapp.GetMaccPerms()
+	maccPerms := simapp.GetMaccPerms()
 	maccPerms[multiPerm] = []string{authtypes.Burner, authtypes.Minter, authtypes.Staking}
 
 	suite.app.AccountKeeper = authkeeper.NewAccountKeeper(
@@ -1171,7 +1171,7 @@ func (suite *IntegrationTestSuite) getTestMetadata() []types.Metadata {
 func (suite *IntegrationTestSuite) TestMintCoinRestrictions() {
 	type BankMintingRestrictionFn func(ctx sdk.Context, coins sdk.Coins) error
 
-	maccPerms := simulateapp.GetMaccPerms()
+	maccPerms := simapp.GetMaccPerms()
 	maccPerms[multiPerm] = []string{authtypes.Burner, authtypes.Minter, authtypes.Staking}
 
 	suite.app.AccountKeeper = authkeeper.NewAccountKeeper(
