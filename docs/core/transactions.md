@@ -20,7 +20,7 @@ When users want to interact with an application and make state changes (e.g. sen
 
 Transaction objects are Cosmos SDK types that implement the `Tx` interface
 
-+++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.0-rc1/types/tx_msg.go#L38-L46
++++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.13/types/tx_msg.go#L38-L46
 
 It contains the following methods:
 
@@ -37,7 +37,7 @@ Every message in a transaction must be signed by the addresses specified by its 
 
 The most used implementation of the `Tx` interface is the Protobuf `Tx` message, which is used in `SIGN_MODE_DIRECT`:
 
-+++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.0-rc1/proto/cosmos/tx/v1beta1/tx.proto#L13-L26
++++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.13/proto/cosmos/tx/v1beta1/tx.proto#L13-L26
 
 Because Protobuf serialization is not deterministic, the Cosmos SDK uses an additional `TxRaw` type to denote the pinned bytes over which a transaction is signed. Any user can generate a valid `body` and `auth_info` for a transaction, and serialize these two messages using Protobuf. `TxRaw` then pins the user's exact binary representation of `body` and `auth_info`, called respectively `body_bytes` and `auth_info_bytes`. The document that is signed by all signers of the transaction is `SignDoc` (deterministically serialized using [ADR-027](../architecture/adr-027-deterministic-protobuf-serialization.md)):
 

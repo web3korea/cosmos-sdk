@@ -115,10 +115,11 @@ Add below line to `go.mod` to replace protobuf, read more [#8469](https://github
 
 ```go
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+replace google.golang.org/grpc => google.golang.org/grpc v1.33.2
 ```
 
 ```bash
-go get github.com/cosmos/cosmos-sdk@main
+go get github.com/cosmos/cosmos-sdk@v0.46.13
 ```
 
 ```go

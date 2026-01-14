@@ -53,7 +53,7 @@ The first thing defined in `app.go` is the `type` of the application. It is gene
 
 See an example of application type definition from `simapp`, the Cosmos SDK's own app used for demo and testing purposes:
 
-+++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.0-rc1/simapp/app.go#L151-L193
++++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.13/simapp/app.go#L151-L193
 
 ### Constructor Function
 
@@ -81,7 +81,7 @@ Note that this function only creates an instance of the app, while the actual st
 
 See an example of application constructor from `simapp`:
 
-+++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.0-rc1/simapp/app.go#L204-L474
++++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.13/simapp/app.go#L204-L474
 
 ### InitChainer
 
@@ -91,7 +91,7 @@ In general, the `InitChainer` is mostly composed of the [`InitGenesis`](../build
 
 See an example of an `InitChainer` from `simapp`:
 
-+++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.0-rc1/simapp/app.go#L524-L532
++++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.13/simapp/app.go#L524-L532
 
 ### BeginBlocker and EndBlocker
 
@@ -103,7 +103,7 @@ As a sidenote, it is important to remember that application-specific blockchains
 
 See an example of `BeginBlocker` and `EndBlocker` functions from `simapp`
 
-+++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.0-rc1/simapp/app.go#L514-L522
++++ https://github.com/cosmos/cosmos-sdk/blob/v0.46.13/simapp/app.go#L514-L522
 
 ### Register Codec
 
