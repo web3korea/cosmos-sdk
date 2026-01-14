@@ -1,0 +1,60 @@
+syntax = "proto3";
+package cosmos.kyc.v1beta1;
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+import "cosmos_proto/cosmos.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+option go_package = "github.com/cosmos/cosmos-sdk/x/kyc/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // KYC queries the KYC record of a given address
+  rpc KYC(QueryGetKYCRequest) returns (QueryGetKYCResponse) {
+    option (google.api.http).get = "/cosmos/kyc/v1beta1/kyc/{address}";
+  }
+
+  // KYCAll queries all KYC records with pagination
+  rpc KYCAll(QueryAllKYCRequest) returns (QueryAllKYCResponse) {
+    option (google.api.http).get = "/cosmos/kyc/v1beta1/kyc";
+  }
+
+  // Validators queries all KYC validators with pagination
+  rpc Validators(QueryAllValidatorsRequest) returns (QueryAllValidatorsResponse) {
+    option (google.api.http).get = "/cosmos/kyc/v1beta1/validators";
+  }
+}
+
+// QueryGetKYCRequest is the request type for the Query/KYC RPC method
+message QueryGetKYCRequest {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// QueryGetKYCResponse is the response type for the Query/KYC RPC method
+message QueryGetKYCResponse {
+  KYC kyc = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllKYCRequest is the request type for the Query/KYCAll RPC method
+message QueryAllKYCRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllKYCResponse is the response type for the Query/KYCAll RPC method
+message QueryAllKYCResponse {
+  repeated KYC kyc     = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryAllValidatorsRequest is the request type for the Query/Validators RPC method
+message QueryAllValidatorsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllValidatorsResponse is the response type for the Query/Validators RPC method
+message QueryAllValidatorsResponse {
+  repeated Validator validators = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

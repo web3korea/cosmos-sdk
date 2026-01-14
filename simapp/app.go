@@ -44,6 +44,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
+	"github.com/cosmos/cosmos-sdk/x/kyc"
+	kyckeeper "github.com/cosmos/cosmos-sdk/x/kyc/keeper"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -130,6 +132,7 @@ var (
 		groupmodule.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		nftmodule.AppModuleBasic{},
+		kyc.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -182,6 +185,7 @@ type SimApp struct {
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
 	NFTKeeper        nftkeeper.Keeper
+	KYCKeeper        kyckeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -222,7 +226,7 @@ func NewSimApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, capabilitytypes.StoreKey,
-		authzkeeper.StoreKey, nftkeeper.StoreKey, group.StoreKey,
+		authzkeeper.StoreKey, nftkeeper.StoreKey, group.StoreKey, kyc.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	// NOTE: The testingkey is just mounted for testing purposes. Actual applications should
@@ -328,6 +332,11 @@ func NewSimApp(
 
 	app.NFTKeeper = nftkeeper.NewKeeper(keys[nftkeeper.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
 
+	// KYC keeper
+	app.KYCKeeper = kyckeeper.NewKeeper(
+		appCodec, keys[kyc.StoreKey], keys[kyc.MemStoreKey], app.GetSubspace(kyc.ModuleName), app.AccountKeeper,
+	)
+
 	// create evidence keeper with router
 	evidenceKeeper := evidencekeeper.NewKeeper(
 		appCodec, keys[evidencetypes.StoreKey], &app.StakingKeeper, app.SlashingKeeper,
@@ -365,6 +374,7 @@ func NewSimApp(
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		nftmodule.NewAppModule(appCodec, app.NFTKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
+		kyc.NewAppModule(appCodec, app.KYCKeeper, app.AccountKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -376,7 +386,7 @@ func NewSimApp(
 		upgradetypes.ModuleName, capabilitytypes.ModuleName, minttypes.ModuleName, distrtypes.ModuleName, slashingtypes.ModuleName,
 		evidencetypes.ModuleName, stakingtypes.ModuleName,
 		authtypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName,
-		authz.ModuleName, feegrant.ModuleName, nft.ModuleName, group.ModuleName,
+		authz.ModuleName, feegrant.ModuleName, nft.ModuleName, group.ModuleName, kyc.ModuleName,
 		paramstypes.ModuleName, vestingtypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
@@ -384,7 +394,7 @@ func NewSimApp(
 		capabilitytypes.ModuleName, authtypes.ModuleName, banktypes.ModuleName, distrtypes.ModuleName,
 		slashingtypes.ModuleName, minttypes.ModuleName,
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
-		feegrant.ModuleName, nft.ModuleName, group.ModuleName,
+		feegrant.ModuleName, nft.ModuleName, group.ModuleName, kyc.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName,
 	)
 
@@ -398,7 +408,7 @@ func NewSimApp(
 		capabilitytypes.ModuleName, authtypes.ModuleName, banktypes.ModuleName, distrtypes.ModuleName, stakingtypes.ModuleName,
 		slashingtypes.ModuleName, govtypes.ModuleName, minttypes.ModuleName, crisistypes.ModuleName,
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
-		feegrant.ModuleName, nft.ModuleName, group.ModuleName,
+		feegrant.ModuleName, nft.ModuleName, group.ModuleName, kyc.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName,
 	)
 

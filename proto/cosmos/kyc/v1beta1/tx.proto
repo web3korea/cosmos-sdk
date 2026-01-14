@@ -1,0 +1,71 @@
+syntax = "proto3";
+package cosmos.kyc.v1beta1;
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+import "cosmos_proto/cosmos.proto";
+import "cosmos/msg/v1/msg.proto";
+
+option go_package = "github.com/cosmos/cosmos-sdk/x/kyc/types";
+
+// Msg defines the kyc Msg service.
+service Msg {
+  // RegisterKYC defines a method for registering KYC
+  rpc RegisterKYC(MsgRegisterKYC) returns (MsgRegisterKYCResponse);
+
+  // ApproveKYC defines a method for approving KYC
+  rpc ApproveKYC(MsgApproveKYC) returns (MsgApproveKYCResponse);
+
+  // RejectKYC defines a method for rejecting KYC
+  rpc RejectKYC(MsgRejectKYC) returns (MsgRejectKYCResponse);
+}
+
+// MsgRegisterKYC defines a SDK message for registering KYC.
+message MsgRegisterKYC {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string                  sender      = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string                  full_name   = 2;
+  google.protobuf.Timestamp date_of_birth = 3 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  string                  country     = 4;
+  string                  address_info = 5;
+  string                  id_type     = 6;
+  string                  id_number   = 7;
+}
+
+// MsgRegisterKYCResponse defines the Msg/RegisterKYC response type.
+message MsgRegisterKYCResponse {}
+
+// MsgApproveKYC defines a SDK message for approving KYC.
+message MsgApproveKYC {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender   = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string user     = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string comments = 3;
+}
+
+// MsgApproveKYCResponse defines the Msg/ApproveKYC response type.
+message MsgApproveKYCResponse {}
+
+// MsgRejectKYC defines a SDK message for rejecting KYC.
+message MsgRejectKYC {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender   = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string user     = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string comments = 3;
+}
+
+// MsgRejectKYCResponse defines the Msg/RejectKYC response type.
+message MsgRejectKYCResponse {}

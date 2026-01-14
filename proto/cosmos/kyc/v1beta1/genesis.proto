@@ -1,0 +1,20 @@
+syntax = "proto3";
+package cosmos.kyc.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+import "cosmos/kyc/v1beta1/kyc.proto";
+
+option go_package = "github.com/cosmos/cosmos-sdk/x/kyc/types";
+
+// GenesisState defines the kyc module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated KYC kyc_records = 2 [(gogoproto.nullable) = false];
+  repeated Validator validators = 3 [(gogoproto.nullable) = false];
+}
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+}

@@ -1,0 +1,52 @@
+syntax = "proto3";
+package cosmos.kyc.v1beta1;
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/cosmos/cosmos-sdk/x/kyc/types";
+
+// KYC represents a KYC record
+message KYC {
+  // Address of the user
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Personal information
+  string full_name = 2;
+  google.protobuf.Timestamp date_of_birth = 3 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  string country = 4;
+  string address_info = 5;
+
+  // Identification documents
+  string id_type = 6;   // passport, drivers_license, national_id
+  string id_number = 7;
+
+  // KYC status and timestamps
+  string status = 8;
+  google.protobuf.Timestamp submitted_at = 9 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  google.protobuf.Timestamp reviewed_at = 10 [(gogoproto.stdtime) = true];
+  string reviewed_by = 11 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string review_comments = 12;
+  google.protobuf.Timestamp expires_at = 13 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+
+  // Additional metadata
+  repeated KYCDocument documents = 14 [(gogoproto.nullable) = false];
+}
+
+// KYCDocument represents a document associated with KYC
+message KYCDocument {
+  string type = 1;               // photo, passport_scan, etc.
+  string url = 2;                // IPFS hash or URL
+  string hash = 3;              // Document hash for verification
+  google.protobuf.Timestamp uploaded_at = 4 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+}
+
+// Validator represents a KYC validator
+message Validator {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string name = 2;
+  repeated string permissions = 3; // approve, reject, suspend
+  bool is_active = 4;
+}
