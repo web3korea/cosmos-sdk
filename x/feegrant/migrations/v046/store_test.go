@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
@@ -14,7 +14,7 @@ import (
 )
 
 func TestMigration(t *testing.T) {
-	encCfg := simapp.MakeTestEncodingConfig()
+	encCfg := simulateapp.MakeTestEncodingConfig()
 	cdc := encCfg.Codec
 	feegrantKey := sdk.NewKVStoreKey(v046.ModuleName)
 	ctx := testutil.DefaultContext(feegrantKey, sdk.NewTransientStoreKey("transient_test"))

@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	codecTypes "github.com/cosmos/cosmos-sdk/codec/types"
 	serverTypes "github.com/cosmos/cosmos-sdk/server/types"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	"github.com/cosmos/cosmos-sdk/store/streaming"
 	"github.com/cosmos/cosmos-sdk/store/streaming/file"
 	"github.com/cosmos/cosmos-sdk/store/types"
@@ -56,7 +56,7 @@ func TestStreamingServiceConstructor(t *testing.T) {
 
 func TestLoadStreamingServices(t *testing.T) {
 	db := dbm.NewMemDB()
-	encCdc := simapp.MakeTestEncodingConfig()
+	encCdc := simulateapp.MakeTestEncodingConfig()
 	keys := sdk.NewKVStoreKeys("mockKey1", "mockKey2")
 	bApp := baseapp.NewBaseApp("appName", log.NewNopLogger(), db, nil)
 
@@ -65,7 +65,7 @@ func TestLoadStreamingServices(t *testing.T) {
 		activeStreamersLen int
 	}{
 		"empty app options": {
-			appOpts: simapp.EmptyAppOptions{},
+			appOpts: simulateapp.EmptyAppOptions{},
 		},
 		"all StoreKeys exposed": {
 			appOpts:            streamingAppOptions{keys: []string{"*"}},

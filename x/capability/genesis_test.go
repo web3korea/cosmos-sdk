@@ -5,7 +5,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
@@ -34,8 +34,8 @@ func (suite *CapabilityTestSuite) TestGenesis() {
 	// create new app that does not share persistent or in-memory state
 	// and initialize app from exported genesis state above.
 	db := dbm.NewMemDB()
-	encCdc := simapp.MakeTestEncodingConfig()
-	newApp := simapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simapp.DefaultNodeHome, 5, encCdc, simapp.EmptyAppOptions{})
+	encCdc := simulateapp.MakeTestEncodingConfig()
+	newApp := simulateapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simulateapp.DefaultNodeHome, 5, encCdc, simulateapp.EmptyAppOptions{})
 
 	newKeeper := keeper.NewKeeper(suite.cdc, newApp.GetKey(types.StoreKey), newApp.GetMemKey(types.MemStoreKey))
 	newSk1 := newKeeper.ScopeToModule(banktypes.ModuleName)

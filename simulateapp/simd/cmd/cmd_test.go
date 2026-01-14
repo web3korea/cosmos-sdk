@@ -8,8 +8,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	"github.com/cosmos/cosmos-sdk/simapp/simd/cmd"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp/simd/cmd"
 	"github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 )
 
@@ -17,11 +17,11 @@ func TestInitCmd(t *testing.T) {
 	rootCmd, _ := cmd.NewRootCmd()
 	rootCmd.SetArgs([]string{
 		"init",        // Test the init cmd
-		"simapp-test", // Moniker
+		"simulateapp-test", // Moniker
 		fmt.Sprintf("--%s=%s", cli.FlagOverwrite, "true"), // Overwrite genesis.json, in case it already exists
 	})
 
-	require.NoError(t, svrcmd.Execute(rootCmd, "", simapp.DefaultNodeHome))
+	require.NoError(t, svrcmd.Execute(rootCmd, "", simulateapp.DefaultNodeHome))
 }
 
 func TestHomeFlagRegistration(t *testing.T) {
@@ -35,7 +35,7 @@ func TestHomeFlagRegistration(t *testing.T) {
 		homeDir,
 	})
 
-	require.NoError(t, svrcmd.Execute(rootCmd, "", simapp.DefaultNodeHome))
+	require.NoError(t, svrcmd.Execute(rootCmd, "", simulateapp.DefaultNodeHome))
 
 	result, err := rootCmd.Flags().GetString(flags.FlagHome)
 	require.NoError(t, err)

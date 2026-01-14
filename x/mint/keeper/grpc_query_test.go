@@ -8,7 +8,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
 )
@@ -16,13 +16,13 @@ import (
 type MintTestSuite struct {
 	suite.Suite
 
-	app         *simapp.SimApp
+	app         *simulateapp.SimApp
 	ctx         sdk.Context
 	queryClient types.QueryClient
 }
 
 func (suite *MintTestSuite) SetupTest() {
-	app := simapp.Setup(suite.T(), false)
+	app := simulateapp.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry())

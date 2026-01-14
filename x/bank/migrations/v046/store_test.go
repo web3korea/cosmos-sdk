@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -46,7 +46,7 @@ var (
 )
 
 func TestMigrateStore(t *testing.T) {
-	encCfg := simapp.MakeTestEncodingConfig()
+	encCfg := simulateapp.MakeTestEncodingConfig()
 	bankKey := sdk.NewKVStoreKey("bank")
 	ctx := testutil.DefaultContext(bankKey, sdk.NewTransientStoreKey("transient_test"))
 	store := ctx.KVStore(bankKey)
@@ -84,7 +84,7 @@ func TestMigrateStore(t *testing.T) {
 }
 
 func TestMigrateDenomMetaData(t *testing.T) {
-	encCfg := simapp.MakeTestEncodingConfig()
+	encCfg := simulateapp.MakeTestEncodingConfig()
 	bankKey := sdk.NewKVStoreKey("bank")
 	ctx := testutil.DefaultContext(bankKey, sdk.NewTransientStoreKey("transient_test"))
 	store := ctx.KVStore(bankKey)
@@ -135,7 +135,7 @@ func migrateDenomMetadataV0464(store sdk.KVStore) error {
 
 func TestMigrate_V046_4_To_V046_5(t *testing.T) {
 	// Step 1. Create a v0.43 state.
-	encCfg := simapp.MakeTestEncodingConfig()
+	encCfg := simulateapp.MakeTestEncodingConfig()
 	bankKey := sdk.NewKVStoreKey("bank")
 	ctx := testutil.DefaultContext(bankKey, sdk.NewTransientStoreKey("transient_test"))
 	store := ctx.KVStore(bankKey)

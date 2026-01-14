@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
@@ -15,9 +15,9 @@ import (
 )
 
 func TestExpiredGrantsQueue(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, types.Header{})
-	addrs := simapp.AddTestAddrsIncremental(app, ctx, 5, sdk.NewInt(30000000))
+	addrs := simulateapp.AddTestAddrsIncremental(app, ctx, 5, sdk.NewInt(30000000))
 	granter := addrs[0]
 	grantee1 := addrs[1]
 	grantee2 := addrs[2]

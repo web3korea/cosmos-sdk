@@ -13,7 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -336,8 +336,8 @@ func ExamplePaginate(t *testing.T) {
 	// balances:<denom:"foo0denom" amount:"100" > pagination:<next_key:"foo1denom" total:2 >
 }
 
-func setupTest(t *testing.T) (*simapp.SimApp, sdk.Context, codec.Codec) {
-	app := simapp.Setup(t, false)
+func setupTest(t *testing.T) (*simulateapp.SimApp, sdk.Context, codec.Codec) {
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1})
 	appCodec := app.AppCodec()
 

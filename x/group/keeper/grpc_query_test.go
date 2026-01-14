@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/group"
 	"github.com/stretchr/testify/require"
@@ -13,14 +13,14 @@ import (
 )
 
 func TestQueryGroupsByMember(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry())
 	group.RegisterQueryServer(queryHelper, app.GroupKeeper)
 	queryClient := group.NewQueryClient(queryHelper)
 	sdkCtx := sdk.WrapSDKContext(ctx)
 
-	addrs := simapp.AddTestAddrsIncremental(app, ctx, 6, sdk.NewInt(30000000))
+	addrs := simulateapp.AddTestAddrsIncremental(app, ctx, 6, sdk.NewInt(30000000))
 
 	// Initial group, group policy and balance setup
 	members := []group.MemberRequest{

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -27,8 +27,8 @@ func IsValSetSorted(data []types.Validator, powerReduction math.Int) bool {
 func TestHistoricalInfo(t *testing.T) {
 	_, app, ctx := createTestInput(t)
 
-	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 50, sdk.NewInt(0))
-	addrVals := simapp.ConvertAddrsToValAddrs(addrDels)
+	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 50, sdk.NewInt(0))
+	addrVals := simulateapp.ConvertAddrsToValAddrs(addrDels)
 
 	validators := make([]types.Validator, len(addrVals))
 
@@ -54,8 +54,8 @@ func TestHistoricalInfo(t *testing.T) {
 func TestTrackHistoricalInfo(t *testing.T) {
 	_, app, ctx := createTestInput(t)
 
-	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 50, sdk.NewInt(0))
-	addrVals := simapp.ConvertAddrsToValAddrs(addrDels)
+	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 50, sdk.NewInt(0))
+	addrVals := simulateapp.ConvertAddrsToValAddrs(addrDels)
 
 	// set historical entries in params to 5
 	params := types.DefaultParams()
@@ -140,8 +140,8 @@ func TestGetAllHistoricalInfo(t *testing.T) {
 	require.Len(t, infos, 1)
 	app.StakingKeeper.DeleteHistoricalInfo(ctx, infos[0].Header.Height)
 
-	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 50, sdk.NewInt(0))
-	addrVals := simapp.ConvertAddrsToValAddrs(addrDels)
+	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 50, sdk.NewInt(0))
+	addrVals := simulateapp.ConvertAddrsToValAddrs(addrDels)
 
 	valSet := []types.Validator{
 		teststaking.NewValidator(t, addrVals[0], PKs[0]),

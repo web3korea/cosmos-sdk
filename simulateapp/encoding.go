@@ -1,7 +1,7 @@
-package simapp
+package simulateapp
 
 import (
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	simulateappparams "github.com/cosmos/cosmos-sdk/simulateapp/params"
 	"github.com/cosmos/cosmos-sdk/std"
 )
 
@@ -9,8 +9,8 @@ import (
 // should be used only in tests or when creating a new app instance (NewApp*()).
 // App user shouldn't create new codecs - use the app.AppCodec instead.
 // [DEPRECATED]
-func MakeTestEncodingConfig() simappparams.EncodingConfig {
-	encodingConfig := simappparams.MakeTestEncodingConfig()
+func MakeTestEncodingConfig() simulateappparams.EncodingConfig {
+	encodingConfig := simulateappparams.MakeTestEncodingConfig()
 	std.RegisterLegacyAminoCodec(encodingConfig.Amino)
 	std.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 	ModuleBasics.RegisterLegacyAminoCodec(encodingConfig.Amino)

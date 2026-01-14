@@ -9,7 +9,7 @@ import (
 	tmtime "github.com/tendermint/tendermint/types/time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
@@ -26,14 +26,14 @@ var (
 type TestSuite struct {
 	suite.Suite
 
-	app         *simapp.SimApp
+	app         *simulateapp.SimApp
 	ctx         sdk.Context
 	addrs       []sdk.AccAddress
 	queryClient authz.QueryClient
 }
 
 func (s *TestSuite) SetupTest() {
-	app := simapp.Setup(s.T(), false)
+	app := simulateapp.Setup(s.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	now := tmtime.Now()
 	ctx = ctx.WithBlockHeader(tmproto.Header{Time: now})
@@ -45,7 +45,7 @@ func (s *TestSuite) SetupTest() {
 	s.app = app
 	s.ctx = ctx
 	s.queryClient = queryClient
-	s.addrs = simapp.AddTestAddrsIncremental(app, ctx, 7, sdk.NewInt(30000000))
+	s.addrs = simulateapp.AddTestAddrsIncremental(app, ctx, 7, sdk.NewInt(30000000))
 }
 
 func (s *TestSuite) TestKeeper() {

@@ -8,14 +8,14 @@ import (
 	"github.com/stretchr/testify/require"
 	ocproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
 )
 
 func TestFilteredFeeValidAllow(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 
 	ctx := app.BaseApp.NewContext(false, ocproto.Header{
 		Time: time.Now(),
@@ -167,7 +167,7 @@ func TestFilteredFeeValidAllow(t *testing.T) {
 				require.NoError(t, err)
 
 				// save the grant
-				cdc := simapp.MakeTestEncodingConfig().Codec
+				cdc := simulateapp.MakeTestEncodingConfig().Codec
 				bz, err := cdc.Marshal(&newGrant)
 				require.NoError(t, err)
 

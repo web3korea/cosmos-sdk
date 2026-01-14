@@ -7,7 +7,7 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
@@ -17,11 +17,11 @@ import (
 )
 
 func TestAllocateTokensToValidatorWithCommission(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
-	addrs := simapp.AddTestAddrs(app, ctx, 3, sdk.NewInt(1234))
-	valAddrs := simapp.ConvertAddrsToValAddrs(addrs)
+	addrs := simulateapp.AddTestAddrs(app, ctx, 3, sdk.NewInt(1234))
+	valAddrs := simulateapp.ConvertAddrsToValAddrs(addrs)
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
 
 	// create validator with 50% commission
@@ -46,14 +46,14 @@ func TestAllocateTokensToValidatorWithCommission(t *testing.T) {
 }
 
 func TestAllocateTokensToManyValidators(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	// reset fee pool
 	app.DistrKeeper.SetFeePool(ctx, disttypes.InitialFeePool())
 
-	addrs := simapp.AddTestAddrs(app, ctx, 2, sdk.NewInt(1234))
-	valAddrs := simapp.ConvertAddrsToValAddrs(addrs)
+	addrs := simulateapp.AddTestAddrs(app, ctx, 2, sdk.NewInt(1234))
+	valAddrs := simulateapp.ConvertAddrsToValAddrs(addrs)
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
 
 	// create validator with 50% commission
@@ -120,14 +120,14 @@ func TestAllocateTokensToManyValidators(t *testing.T) {
 }
 
 func TestAllocateTokensTruncation(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	// reset fee pool
 	app.DistrKeeper.SetFeePool(ctx, disttypes.InitialFeePool())
 
-	addrs := simapp.AddTestAddrs(app, ctx, 3, sdk.NewInt(1234))
-	valAddrs := simapp.ConvertAddrsToValAddrs(addrs)
+	addrs := simulateapp.AddTestAddrs(app, ctx, 3, sdk.NewInt(1234))
+	valAddrs := simulateapp.ConvertAddrsToValAddrs(addrs)
 	tstaking := teststaking.NewHelper(t, ctx, app.StakingKeeper)
 
 	// create validator with 10% commission

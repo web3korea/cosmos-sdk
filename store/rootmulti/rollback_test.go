@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -14,16 +14,16 @@ import (
 
 func TestRollback(t *testing.T) {
 	db := dbm.NewMemDB()
-	options := simapp.SetupOptions{
+	options := simulateapp.SetupOptions{
 		Logger:             log.NewNopLogger(),
 		DB:                 db,
 		InvCheckPeriod:     0,
-		EncConfig:          simapp.MakeTestEncodingConfig(),
-		HomePath:           simapp.DefaultNodeHome,
+		EncConfig:          simulateapp.MakeTestEncodingConfig(),
+		HomePath:           simulateapp.DefaultNodeHome,
 		SkipUpgradeHeights: map[int64]bool{},
-		AppOpts:            simapp.EmptyAppOptions{},
+		AppOpts:            simulateapp.EmptyAppOptions{},
 	}
-	app := simapp.NewSimappWithCustomOptions(t, false, options)
+	app := simulateapp.NewSimappWithCustomOptions(t, false, options)
 	app.Commit()
 	ver0 := app.LastBlockHeight()
 	// commit 10 blocks
@@ -49,7 +49,7 @@ func TestRollback(t *testing.T) {
 	require.Equal(t, target, app.LastBlockHeight())
 
 	// recreate app to have clean check state
-	app = simapp.NewSimApp(options.Logger, options.DB, nil, true, map[int64]bool{}, simapp.DefaultNodeHome, options.InvCheckPeriod, options.EncConfig, options.AppOpts)
+	app = simulateapp.NewSimApp(options.Logger, options.DB, nil, true, map[int64]bool{}, simulateapp.DefaultNodeHome, options.InvCheckPeriod, options.EncConfig, options.AppOpts)
 	store = app.NewContext(true, tmproto.Header{}).KVStore(app.GetKey("bank"))
 	require.Equal(t, []byte("value5"), store.Get([]byte("key")))
 

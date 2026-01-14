@@ -9,7 +9,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -21,21 +21,21 @@ import (
 type SlashingTestSuite struct {
 	suite.Suite
 
-	app         *simapp.SimApp
+	app         *simulateapp.SimApp
 	ctx         sdk.Context
 	queryClient types.QueryClient
 	addrDels    []sdk.AccAddress
 }
 
 func (suite *SlashingTestSuite) SetupTest() {
-	app := simapp.Setup(suite.T(), false)
+	app := simulateapp.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	app.AccountKeeper.SetParams(ctx, authtypes.DefaultParams())
 	app.BankKeeper.SetParams(ctx, banktypes.DefaultParams())
 	app.SlashingKeeper.SetParams(ctx, testslashing.TestParams())
 
-	addrDels := simapp.AddTestAddrsIncremental(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
+	addrDels := simulateapp.AddTestAddrsIncremental(app, ctx, 2, app.StakingKeeper.TokensFromConsensusPower(ctx, 200))
 
 	info1 := types.NewValidatorSigningInfo(sdk.ConsAddress(addrDels[0]), int64(4), int64(3),
 		time.Unix(2, 0), false, int64(10))

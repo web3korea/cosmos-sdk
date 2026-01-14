@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -36,11 +36,11 @@ func getTestProposal() []sdk.Msg {
 	}
 }
 
-func createValidators(t *testing.T, ctx sdk.Context, app *simapp.SimApp, powers []int64) ([]sdk.AccAddress, []sdk.ValAddress) {
-	addrs := simapp.AddTestAddrsIncremental(app, ctx, 5, sdk.NewInt(30000000))
-	valAddrs := simapp.ConvertAddrsToValAddrs(addrs)
-	pks := simapp.CreateTestPubKeys(5)
-	cdc := simapp.MakeTestEncodingConfig().Codec
+func createValidators(t *testing.T, ctx sdk.Context, app *simulateapp.SimApp, powers []int64) ([]sdk.AccAddress, []sdk.ValAddress) {
+	addrs := simulateapp.AddTestAddrsIncremental(app, ctx, 5, sdk.NewInt(30000000))
+	valAddrs := simulateapp.ConvertAddrsToValAddrs(addrs)
+	pks := simulateapp.CreateTestPubKeys(5)
+	cdc := simulateapp.MakeTestEncodingConfig().Codec
 
 	app.StakingKeeper = stakingkeeper.NewKeeper(
 		cdc,

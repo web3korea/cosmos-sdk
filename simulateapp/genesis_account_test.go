@@ -1,11 +1,11 @@
-package simapp_test
+package simulateapp_test
 
 import (
 	"testing"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
@@ -24,26 +24,26 @@ func TestSimGenesisAccountValidate(t *testing.T) {
 
 	testCases := []struct {
 		name    string
-		sga     simapp.SimGenesisAccount
+		sga     simulateapp.SimGenesisAccount
 		wantErr bool
 	}{
 		{
 			"valid basic account",
-			simapp.SimGenesisAccount{
+			simulateapp.SimGenesisAccount{
 				BaseAccount: baseAcc,
 			},
 			false,
 		},
 		{
 			"invalid basic account with mismatching address/pubkey",
-			simapp.SimGenesisAccount{
+			simulateapp.SimGenesisAccount{
 				BaseAccount: authtypes.NewBaseAccount(addr, secp256k1.GenPrivKey().PubKey(), 0, 0),
 			},
 			true,
 		},
 		{
 			"valid basic account with module name",
-			simapp.SimGenesisAccount{
+			simulateapp.SimGenesisAccount{
 				BaseAccount: authtypes.NewBaseAccount(sdk.AccAddress(crypto.AddressHash([]byte("testmod"))), nil, 0, 0),
 				ModuleName:  "testmod",
 			},
@@ -51,7 +51,7 @@ func TestSimGenesisAccountValidate(t *testing.T) {
 		},
 		{
 			"valid basic account with invalid module name/pubkey pair",
-			simapp.SimGenesisAccount{
+			simulateapp.SimGenesisAccount{
 				BaseAccount: baseAcc,
 				ModuleName:  "testmod",
 			},
@@ -59,7 +59,7 @@ func TestSimGenesisAccountValidate(t *testing.T) {
 		},
 		{
 			"valid basic account with valid vesting attributes",
-			simapp.SimGenesisAccount{
+			simulateapp.SimGenesisAccount{
 				BaseAccount:     baseAcc,
 				OriginalVesting: coins,
 				StartTime:       vestingStart.Unix(),
@@ -69,7 +69,7 @@ func TestSimGenesisAccountValidate(t *testing.T) {
 		},
 		{
 			"valid basic account with invalid vesting end time",
-			simapp.SimGenesisAccount{
+			simulateapp.SimGenesisAccount{
 				BaseAccount:     baseAcc,
 				OriginalVesting: coins,
 				StartTime:       vestingStart.Add(2 * time.Hour).Unix(),

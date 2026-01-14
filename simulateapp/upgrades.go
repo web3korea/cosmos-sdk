@@ -1,4 +1,4 @@
-package simapp
+package simulateapp
 
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"

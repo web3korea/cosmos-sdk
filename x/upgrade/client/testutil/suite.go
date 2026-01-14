@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/cosmos/cosmos-sdk/testutil/network"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -21,7 +21,7 @@ func NewIntegrationTestSuite(cfg network.Config) *IntegrationTestSuite {
 type IntegrationTestSuite struct {
 	suite.Suite
 
-	app     *simapp.SimApp
+	app     *simulateapp.SimApp
 	cfg     network.Config
 	network *network.Network
 	ctx     sdk.Context
@@ -29,7 +29,7 @@ type IntegrationTestSuite struct {
 
 func (s *IntegrationTestSuite) SetupSuite() {
 	s.T().Log("setting up integration test suite")
-	app := simapp.Setup(s.T(), false)
+	app := simulateapp.Setup(s.T(), false)
 	s.app = app
 	s.ctx = app.BaseApp.NewContext(false, tmproto.Header{})
 

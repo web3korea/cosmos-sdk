@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	"github.com/cosmos/cosmos-sdk/x/feegrant/module"
@@ -14,10 +14,10 @@ import (
 )
 
 func TestFeegrantPruning(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
-	addrs := simapp.AddTestAddrs(app, ctx, 4, sdk.NewInt(1000))
+	addrs := simulateapp.AddTestAddrs(app, ctx, 4, sdk.NewInt(1000))
 	granter1 := addrs[0]
 	granter2 := addrs[1]
 	granter3 := addrs[2]

@@ -9,7 +9,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/distribution/keeper"
@@ -116,14 +116,14 @@ func TestQueries(t *testing.T) {
 	types.RegisterLegacyAminoCodec(cdc)
 	banktypes.RegisterLegacyAminoCodec(cdc)
 
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	// reset fee pool
 	app.DistrKeeper.SetFeePool(ctx, types.InitialFeePool())
 
-	addr := simapp.AddTestAddrs(app, ctx, 1, sdk.NewInt(1000000000))
-	valAddrs := simapp.ConvertAddrsToValAddrs(addr)
+	addr := simulateapp.AddTestAddrs(app, ctx, 1, sdk.NewInt(1000000000))
+	valAddrs := simulateapp.ConvertAddrsToValAddrs(addr)
 	valOpAddr1 := valAddrs[0]
 
 	querier := keeper.NewQuerier(app.DistrKeeper, cdc)

@@ -9,15 +9,15 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
-func bootstrapGenesisTest(t *testing.T, numAddrs int) (*simapp.SimApp, sdk.Context, []sdk.AccAddress) {
-	app := simapp.Setup(t, false)
+func bootstrapGenesisTest(t *testing.T, numAddrs int) (*simulateapp.SimApp, sdk.Context, []sdk.AccAddress) {
+	app := simulateapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	addrDels, _ := generateAddresses(app, ctx, numAddrs)
@@ -113,7 +113,7 @@ func TestInitGenesis(t *testing.T) {
 }
 
 func TestInitGenesis_PoolsBalanceMismatch(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simulateapp.Setup(t, false)
 	ctx := app.NewContext(false, tmproto.Header{})
 
 	consPub, err := codectypes.NewAnyWithValue(PKs[0])

@@ -13,7 +13,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/simulateapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -24,7 +24,7 @@ import (
 type GenesisTestSuite struct {
 	suite.Suite
 
-	app    *simapp.SimApp
+	app    *simulateapp.SimApp
 	ctx    context.Context
 	sdkCtx sdk.Context
 	keeper keeper.Keeper
@@ -45,8 +45,8 @@ var (
 func (s *GenesisTestSuite) SetupSuite() {
 	checkTx := false
 	db := dbm.NewMemDB()
-	encCdc := simapp.MakeTestEncodingConfig()
-	app := simapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simapp.DefaultNodeHome, 5, encCdc, simapp.EmptyAppOptions{})
+	encCdc := simulateapp.MakeTestEncodingConfig()
+	app := simulateapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simulateapp.DefaultNodeHome, 5, encCdc, simulateapp.EmptyAppOptions{})
 
 	s.app = app
 	s.sdkCtx = app.BaseApp.NewUncachedContext(checkTx, tmproto.Header{})
